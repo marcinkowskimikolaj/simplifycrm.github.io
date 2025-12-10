@@ -643,10 +643,7 @@
         </div>
     </div>
 
-    <!-- Google API Scripts -->
-    <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
-    <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
-
+    <!-- Configuration and initialization functions BEFORE Google scripts -->
     <script>
         // ============================================
         // KONFIGURACJA - ZMIEŃ TE WARTOŚCI!
@@ -667,32 +664,36 @@
         };
 
         // ============================================
-        // STATE
+        // These functions are called by Google API scripts when they load
         // ============================================
+        
         let gapiInited = false;
         let gisInited = false;
         let tokenClient;
-        let accessToken = null;
-        let contacts = [];
-        let editingIndex = null;
-
-        // ============================================
-        // INIT
-        // ============================================
+        
         function gapiLoaded() {
+            console.log('✓ Google API (gapi) loaded');
             gapi.load('client', initializeGapiClient);
         }
 
         async function initializeGapiClient() {
-            await gapi.client.init({
-                apiKey: '', // API Key nie jest wymagany dla OAuth
-                discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-            });
-            gapiInited = true;
-            maybeEnableButtons();
+            try {
+                await gapi.client.init({
+                    apiKey: '', // API Key nie jest wymagany dla OAuth
+                    discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+                });
+                gapiInited = true;
+                console.log('✓ GAPI client initialized');
+                maybeEnableButtons();
+            } catch (err) {
+                console.error('✗ Błąd inicjalizacji GAPI client:', err);
+                showStatus('Błąd inicjalizacji Google API', 'error');
+            }
         }
 
         function gisLoaded() {
+            console.log('✓ Google Identity Services (GIS) loaded');
+            
             try {
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CONFIG.CLIENT_ID,
@@ -700,19 +701,67 @@
                     callback: '', // będzie ustawione później
                 });
                 gisInited = true;
+                console.log('✓ GIS token client initialized');
                 maybeEnableButtons();
             } catch (err) {
-                console.error('Błąd inicjalizacji Google Identity Services:', err);
+                console.error('✗ Błąd inicjalizacji Google Identity Services:', err);
                 showStatus('Błąd konfiguracji - sprawdź CLIENT_ID', 'error');
             }
         }
 
         function maybeEnableButtons() {
             if (gapiInited && gisInited) {
-                document.getElementById('loginBtn').disabled = false;
-                console.log('Google APIs załadowane poprawnie');
+                const loginBtn = document.getElementById('loginBtn');
+                if (loginBtn) {
+                    loginBtn.disabled = false;
+                    console.log('✓ Wszystko załadowane - przycisk logowania aktywny');
+                }
             }
         }
+
+        // Show status message helper (defined early so it can be used by init functions)
+        function showStatus(message, type) {
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status-message ${type}`;
+            statusDiv.textContent = message;
+            document.body.appendChild(statusDiv);
+
+            setTimeout(() => {
+                statusDiv.remove();
+            }, 3000);
+        }
+
+        // Timeout fallback - if scripts don't load in 10 seconds, show error
+        setTimeout(() => {
+            if (!gapiInited || !gisInited) {
+                console.error('✗ Timeout: Google APIs nie załadowały się w ciągu 10 sekund');
+                console.log('Debug info:');
+                console.log('- gapiInited:', gapiInited);
+                console.log('- gisInited:', gisInited);
+                console.log('- typeof gapi:', typeof gapi);
+                console.log('- typeof google:', typeof google);
+                
+                const loginBtn = document.getElementById('loginBtn');
+                if (loginBtn) {
+                    loginBtn.disabled = true;
+                    loginBtn.textContent = '⚠️ Błąd ładowania Google APIs';
+                }
+                showStatus('Błąd: Google APIs nie mogą się załadować. Sprawdź połączenie z internetem lub użyj HTTP serwera.', 'error');
+            }
+        }, 10000);
+    </script>
+
+    <!-- Google API Scripts - load AFTER configuration and init functions are defined -->
+    <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+    <script>
+        // ============================================
+        // STATE - Additional variables
+        // ============================================
+        let accessToken = null;
+        let contacts = [];
+        let editingIndex = null;
 
         // ============================================
         // AUTHENTICATION
@@ -953,17 +1002,6 @@
         function showEmptyState() {
             document.getElementById('emptyState').style.display = 'block';
             document.getElementById('contactsGrid').innerHTML = '';
-        }
-
-        function showStatus(message, type) {
-            const statusDiv = document.createElement('div');
-            statusDiv.className = `status-message ${type}`;
-            statusDiv.textContent = message;
-            document.body.appendChild(statusDiv);
-
-            setTimeout(() => {
-                statusDiv.remove();
-            }, 3000);
         }
 
         // ============================================
