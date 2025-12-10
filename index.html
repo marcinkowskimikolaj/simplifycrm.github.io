@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheetCRM - Prosty CRM na Google Sheets</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --primary: #2D3748;
+            --primary-light: #4A5568;
+            --accent: #38B2AC;
+            --accent-hover: #319795;
+            --bg: #F7FAFC;
+            --card: #FFFFFF;
+            --text: #1A202C;
+            --text-light: #718096;
+            --border: #E2E8F0;
+            --danger: #F56565;
+            --success: #48BB78;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: var(--card);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 440px;
+            width: 100%;
+            animation: slideUp 0.6s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        
+        .google-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .google-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .setup-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #FFF5F5;
+            border-left: 4px solid var(--danger);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .setup-info h3 {
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .setup-info code {
+            background: rgba(0,0,0,0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+        }
+        
+        /* App Container */
+        .app-container {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        .app-container.active {
+            display: block;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .header-logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-email {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .logout-btn:hover {
+            background: var(--bg);
+            border-color: var(--primary);
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .content-header h1 {
+            font-size: 2rem;
+            color: var(--text);
+        }
+        
+        .add-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .add-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 178, 172, 0.3);
+        }
+        
+        /* Contacts Grid */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .contact-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: var(--accent);
+        }
+        
+        .contact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        
+        .contact-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .icon-btn {
+            padding: 0.5rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: var(--text-light);
+        }
+        
+        .icon-btn:hover {
+            background: var(--bg);
+            color: var(--accent);
+        }
+        
+        .icon-btn.delete:hover {
+            background: #FFF5F5;
+            color: var(--danger);
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .contact-info-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .contact-company {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, var(--accent), #319795);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 16px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.4s ease;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h2 {
+            font-size: 1.5rem;
+            color: var(--text);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        .close-btn:hover {
+            background: var(--bg);
+            color: var(--text);
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.2s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.1);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 178, 172, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+        
+        /* Loading & Empty States */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+        
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+        
+        /* Status Messages */
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideInRight 0.4s ease;
+            z-index: 2000;
+            font-weight: 500;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        .status-message.success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .status-message.error {
+            background: var(--danger);
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="logo">📊 SheetCRM</div>
+            <p class="login-subtitle">Prosty CRM oparty na Google Sheets</p>
+            
+            <button id="loginBtn" class="google-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Zaloguj przez Google
+            </button>
+            
+            <div class="setup-info">
+                <h3>⚙️ Wymagana konfiguracja:</h3>
+                <ol style="margin-left: 1.2rem; margin-top: 0.5rem;">
+                    <li>Stwórz projekt w <a href="https://console.cloud.google.com" target="_blank" style="color: var(--accent);">Google Cloud Console</a></li>
+                    <li>Włącz Google Sheets API</li>
+                    <li>Stwórz OAuth 2.0 Client ID</li>
+                    <li>Dodaj swoje <code>CLIENT_ID</code> w kodzie</li>
+                    <li>Stwórz Google Sheet z arkuszem "Kontakty"</li>
+                    <li>Dodaj <code>SHEET_ID</code> w kodzie</li>
+                </ol>
+                <p style="margin-top: 1rem; text-align: center;">
+                    <a href="troubleshooting.html" target="_blank" style="color: var(--accent); font-weight: 500;">
+                        🔧 Masz problemy? Kliknij tutaj
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Screen -->
+    <div id="appScreen" class="app-container">
+        <header class="header">
+            <div class="header-left">
+                <div class="header-logo">📊 SheetCRM</div>
+            </div>
+            <div class="user-info">
+                <span class="user-email" id="userEmail"></span>
+                <button id="logoutBtn" class="logout-btn">Wyloguj</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Kontakty</h1>
+                <button id="addContactBtn" class="add-btn">
+                    <span>+</span>
+                    Dodaj kontakt
+                </button>
+            </div>
+
+            <div id="loadingState" class="loading">
+                <div class="spinner"></div>
+                <p>Ładowanie kontaktów...</p>
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                <h3>Brak kontaktów</h3>
+                <p>Dodaj pierwszy kontakt aby rozpocząć</p>
+            </div>
+
+            <div id="contactsGrid" class="contacts-grid"></div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Dodaj kontakt</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="contactName">Imię i nazwisko *</label>
+                    <input type="text" id="contactName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email</label>
+                    <input type="email" id="contactEmail">
+                </div>
+                <div class="form-group">
+                    <label for="contactPhone">Telefon</label>
+                    <input type="tel" id="contactPhone">
+                </div>
+                <div class="form-group">
+                    <label for="contactCompany">Firma</label>
+                    <input type="text" id="contactCompany">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Google API Scripts -->
+    <script src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+    <script>
+        // ============================================
+        // KONFIGURACJA - ZMIEŃ TE WARTOŚCI!
+        // ============================================
+        const CONFIG = {
+            // 1. Wklej tutaj CLIENT_ID z Google Cloud Console
+            CLIENT_ID: '567555578754-nsqdiab9suu01a9i1mdgc30vf5g9rq2k.apps.googleusercontent.com',
+            
+            // 2. Wklej tutaj ID swojego Google Sheet (z URLa)
+            // URL: https://docs.google.com/spreadsheets/d/[TUTAJ_JEST_SHEET_ID]/edit
+            SHEET_ID: '1A4vT2_sQnM48Q74jLPqGIT27P8NRdzKwiOsiDdMByJ0',
+            
+            // 3. Nazwa arkusza w Google Sheets (domyślnie "Kontakty")
+            SHEET_NAME: 'Kontakty',
+            
+            // Zakres uprawnień
+            SCOPES: 'https://www.googleapis.com/auth/spreadsheets'
+        };
+
+        // ============================================
+        // STATE
+        // ============================================
+        let gapiInited = false;
+        let gisInited = false;
+        let tokenClient;
+        let accessToken = null;
+        let contacts = [];
+        let editingIndex = null;
+
+        // ============================================
+        // INIT
+        // ============================================
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+
+        async function initializeGapiClient() {
+            await gapi.client.init({
+                apiKey: '', // API Key nie jest wymagany dla OAuth
+                discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+            });
+            gapiInited = true;
+            maybeEnableButtons();
+        }
+
+        function gisLoaded() {
+            try {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: CONFIG.CLIENT_ID,
+                    scope: CONFIG.SCOPES,
+                    callback: '', // będzie ustawione później
+                });
+                gisInited = true;
+                maybeEnableButtons();
+            } catch (err) {
+                console.error('Błąd inicjalizacji Google Identity Services:', err);
+                showStatus('Błąd konfiguracji - sprawdź CLIENT_ID', 'error');
+            }
+        }
+
+        function maybeEnableButtons() {
+            if (gapiInited && gisInited) {
+                document.getElementById('loginBtn').disabled = false;
+                console.log('Google APIs załadowane poprawnie');
+            }
+        }
+
+        // ============================================
+        // AUTHENTICATION
+        // ============================================
+        function handleAuthClick() {
+            // Sprawdź czy CLIENT_ID jest ustawiony
+            if (CONFIG.CLIENT_ID === 'YOUR_CLIENT_ID.apps.googleusercontent.com') {
+                showStatus('Błąd: Musisz ustawić CLIENT_ID w kodzie!', 'error');
+                console.error('CLIENT_ID nie jest skonfigurowany. Sprawdź instrukcję setup.');
+                return;
+            }
+
+            // Sprawdź czy tokenClient jest zainicjalizowany
+            if (!tokenClient) {
+                showStatus('Błąd: Google Identity Services nie załadowane', 'error');
+                console.error('tokenClient is undefined. Google Identity Services nie załadowały się poprawnie.');
+                return;
+            }
+
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    console.error('Błąd autoryzacji:', resp);
+                    showStatus('Błąd logowania: ' + resp.error, 'error');
+                    return;
+                }
+                
+                try {
+                    accessToken = gapi.client.getToken().access_token;
+                    
+                    // Pobierz informacje o użytkowniku
+                    const userInfo = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+                        headers: { Authorization: `Bearer ${accessToken}` }
+                    }).then(r => r.json());
+                    
+                    showApp(userInfo.email);
+                    loadContacts();
+                } catch (err) {
+                    console.error('Błąd pobierania danych użytkownika:', err);
+                    showStatus('Błąd pobierania danych użytkownika', 'error');
+                }
+            };
+
+            try {
+                if (gapi.client.getToken() === null) {
+                    tokenClient.requestAccessToken({prompt: 'consent'});
+                } else {
+                    tokenClient.requestAccessToken({prompt: ''});
+                }
+            } catch (err) {
+                console.error('Błąd requestAccessToken:', err);
+                showStatus('Błąd podczas autoryzacji', 'error');
+            }
+        }
+
+        function handleSignoutClick() {
+            const token = gapi.client.getToken();
+            if (token !== null) {
+                google.accounts.oauth2.revoke(token.access_token);
+                gapi.client.setToken('');
+                accessToken = null;
+                showLogin();
+            }
+        }
+
+        function showApp(email) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appScreen').classList.add('active');
+            document.getElementById('userEmail').textContent = email;
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('appScreen').classList.remove('active');
+            contacts = [];
+            renderContacts();
+        }
+
+        // ============================================
+        // GOOGLE SHEETS API
+        // ============================================
+        async function loadContacts() {
+            // Sprawdź czy SHEET_ID jest ustawiony
+            if (CONFIG.SHEET_ID === 'YOUR_SHEET_ID') {
+                showStatus('Błąd: Musisz ustawić SHEET_ID w kodzie!', 'error');
+                console.error('SHEET_ID nie jest skonfigurowany. Sprawdź instrukcję setup.');
+                showEmptyState();
+                return;
+            }
+
+            showLoading(true);
+            
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range: `${CONFIG.SHEET_NAME}!A2:D`, // Zakładamy kolumny: Imię | Email | Telefon | Firma
+                });
+
+                const rows = response.result.values || [];
+                contacts = rows.map(row => ({
+                    name: row[0] || '',
+                    email: row[1] || '',
+                    phone: row[2] || '',
+                    company: row[3] || ''
+                }));
+
+                renderContacts();
+                showStatus('Kontakty załadowane', 'success');
+            } catch (err) {
+                console.error('Błąd ładowania:', err);
+                let errorMsg = 'Błąd ładowania kontaktów';
+                
+                if (err.result && err.result.error) {
+                    errorMsg += ': ' + err.result.error.message;
+                }
+                
+                showStatus(errorMsg, 'error');
+                showEmptyState();
+            }
+            
+            showLoading(false);
+        }
+
+        async function saveContact(contact) {
+            try {
+                const values = [[contact.name, contact.email, contact.phone, contact.company]];
+                
+                if (editingIndex !== null) {
+                    // Edycja istniejącego
+                    const range = `${CONFIG.SHEET_NAME}!A${editingIndex + 2}:D${editingIndex + 2}`;
+                    await gapi.client.sheets.spreadsheets.values.update({
+                        spreadsheetId: CONFIG.SHEET_ID,
+                        range: range,
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                    
+                    contacts[editingIndex] = contact;
+                    showStatus('Kontakt zaktualizowany', 'success');
+                } else {
+                    // Nowy kontakt
+                    await gapi.client.sheets.spreadsheets.values.append({
+                        spreadsheetId: CONFIG.SHEET_ID,
+                        range: `${CONFIG.SHEET_NAME}!A:D`,
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                    
+                    contacts.push(contact);
+                    showStatus('Kontakt dodany', 'success');
+                }
+
+                renderContacts();
+                closeModal();
+            } catch (err) {
+                console.error('Błąd zapisu:', err);
+                showStatus('Błąd zapisu kontaktu', 'error');
+            }
+        }
+
+        async function deleteContact(index) {
+            if (!confirm('Czy na pewno chcesz usunąć ten kontakt?')) return;
+
+            try {
+                // Google Sheets nie ma prostego API do usuwania wierszy
+                // Więc robimy to przez nadpisanie pustymi wartościami i potem przefiltrowanie
+                const range = `${CONFIG.SHEET_NAME}!A${index + 2}:D${index + 2}`;
+                await gapi.client.sheets.spreadsheets.values.clear({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range: range
+                });
+
+                contacts.splice(index, 1);
+                renderContacts();
+                showStatus('Kontakt usunięty', 'success');
+
+                // Opcjonalnie: odśwież całą listę żeby usunąć puste wiersze
+                await loadContacts();
+            } catch (err) {
+                console.error('Błąd usuwania:', err);
+                showStatus('Błąd usuwania kontaktu', 'error');
+            }
+        }
+
+        // ============================================
+        // UI RENDERING
+        // ============================================
+        function renderContacts() {
+            const grid = document.getElementById('contactsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (contacts.length === 0) {
+                grid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            
+            grid.innerHTML = contacts.map((contact, index) => `
+                <div class="contact-card">
+                    <div class="contact-header">
+                        <div class="contact-name">${escapeHtml(contact.name)}</div>
+                        <div class="contact-actions">
+                            <button class="icon-btn" onclick="editContact(${index})" title="Edytuj">
+                                ✏️
+                            </button>
+                            <button class="icon-btn delete" onclick="deleteContact(${index})" title="Usuń">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    <div class="contact-info">
+                        ${contact.email ? `
+                            <div class="contact-info-row">
+                                <span>📧</span>
+                                <span>${escapeHtml(contact.email)}</span>
+                            </div>
+                        ` : ''}
+                        ${contact.phone ? `
+                            <div class="contact-info-row">
+                                <span>📱</span>
+                                <span>${escapeHtml(contact.phone)}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    ${contact.company ? `
+                        <div class="contact-company">${escapeHtml(contact.company)}</div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingState').style.display = show ? 'block' : 'none';
+            document.getElementById('contactsGrid').style.display = show ? 'none' : 'grid';
+        }
+
+        function showEmptyState() {
+            document.getElementById('emptyState').style.display = 'block';
+            document.getElementById('contactsGrid').innerHTML = '';
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status-message ${type}`;
+            statusDiv.textContent = message;
+            document.body.appendChild(statusDiv);
+
+            setTimeout(() => {
+                statusDiv.remove();
+            }, 3000);
+        }
+
+        // ============================================
+        // MODAL
+        // ============================================
+        function openModal() {
+            document.getElementById('contactModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('contactModal').classList.remove('active');
+            document.getElementById('contactForm').reset();
+            editingIndex = null;
+            document.getElementById('modalTitle').textContent = 'Dodaj kontakt';
+        }
+
+        function editContact(index) {
+            editingIndex = index;
+            const contact = contacts[index];
+            
+            document.getElementById('modalTitle').textContent = 'Edytuj kontakt';
+            document.getElementById('contactName').value = contact.name;
+            document.getElementById('contactEmail').value = contact.email;
+            document.getElementById('contactPhone').value = contact.phone;
+            document.getElementById('contactCompany').value = contact.company;
+            
+            openModal();
+        }
+
+        // ============================================
+        // HELPERS
+        // ============================================
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Login
+            document.getElementById('loginBtn').addEventListener('click', handleAuthClick);
+            document.getElementById('logoutBtn').addEventListener('click', handleSignoutClick);
+
+            // Modal
+            document.getElementById('addContactBtn').addEventListener('click', openModal);
+            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+            document.getElementById('cancelBtn').addEventListener('click', closeModal);
+
+            // Form
+            document.getElementById('contactForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const contact = {
+                    name: document.getElementById('contactName').value,
+                    email: document.getElementById('contactEmail').value,
+                    phone: document.getElementById('contactPhone').value,
+                    company: document.getElementById('contactCompany').value
+                };
+
+                saveContact(contact);
+            });
+
+            // Close modal on background click
+            document.getElementById('contactModal').addEventListener('click', (e) => {
+                if (e.target.id === 'contactModal') {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
