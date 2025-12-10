@@ -2,9 +2,9 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>SheetCRM – Mini CRM na Google Sheets</title>
+    <title>Simplify CRM – Zarządzaj firmami i kontaktami</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Minimalistyczny mini CRM oparty na Google Sheets, w stylistyce CV.">
+    <meta name="description" content="Prosty, nowoczesny CRM do zarządzania firmami i kontaktami biznesowymi.">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap');
@@ -24,6 +24,7 @@
 
             --success: #16a34a;
             --error: #dc2626;
+            --accent: #3b82f6;
         }
 
         *, *::before, *::after {
@@ -199,7 +200,7 @@
         }
 
         .app-inner {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 2.7rem auto 3.2rem;
             padding: 0 2rem;
             width: 100%;
@@ -286,269 +287,328 @@
             transform: translateY(-1px);
         }
 
-        @media (max-width: 640px) {
-            .app-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.9rem;
-            }
+        /* ------------ TABS ------------ */
 
-            .app-header-right {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .user-email {
-                max-width: calc(100% - 130px);
-            }
-        }
-
-        /* ------------ MAIN / TOOLBAR ------------ */
-
-        .app-main {
+        .tabs {
             display: flex;
-            flex-direction: column;
-            gap: 1.75rem;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-subtle);
         }
+
+        .tab-btn {
+            position: relative;
+            padding: 0.85rem 1.4rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--text-primary);
+            transform: scaleX(0);
+            transition: transform 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-primary);
+            opacity: 0.7;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ------------ SECTION HEADER ------------ */
 
         .section-header {
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             justify-content: space-between;
-            gap: 1.25rem;
-            flex-wrap: wrap;
+            margin-bottom: 2.2rem;
+            gap: 1.5rem;
         }
 
         .section-title-block {
-            display: flex;
-            flex-direction: column;
-            gap: 0.45rem;
+            flex: 1;
         }
 
         .section-title {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.15rem;
-            font-weight: 400;
-            letter-spacing: 0.08em;
+            font-size: 2.1rem;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
+            margin-bottom: 0.35rem;
         }
 
         .section-underline {
-            width: 82px;
-            height: 2px;
-            background: var(--text-primary);
+            width: 72px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--text-primary), transparent);
+            margin-bottom: 0.8rem;
         }
 
         .section-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            max-width: 360px;
+            font-size: 0.82rem;
             line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 44rem;
         }
 
         .toolbar {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
+            gap: 0.7rem;
         }
 
         .add-btn {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.55rem;
+            gap: 0.5rem;
+            padding: 0.72rem 1.25rem;
             border-radius: var(--radius-chip);
             border: 1px solid var(--text-primary);
             background: var(--text-primary);
             color: #f5f1ed;
-            padding: 0.7rem 1.1rem;
             font-family: 'Outfit', sans-serif;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
+            font-size: 0.72rem;
             font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
             cursor: pointer;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
         }
 
-        .add-btn span.plus {
-            font-size: 1.05rem;
-            transform: translateY(-1px);
+        .add-btn .plus {
+            font-size: 1.2rem;
+            font-weight: 400;
         }
 
         .add-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 12px 30px rgba(26,26,26,0.22);
+            box-shadow: 0 10px 24px rgba(26,26,26,0.24);
         }
 
-        /* ------------ STANY ------------ */
+        /* ------------ CARDS GRID ------------ */
 
-        .loading {
-            text-align: center;
-            padding: 3rem 1rem 2.5rem;
-            color: var(--text-secondary);
-        }
-
-        .spinner {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 3px solid var(--border-subtle);
-            border-top-color: var(--text-primary);
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        .loading p {
-            font-size: 0.85rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .empty-state {
-            border-radius: 18px;
-            border: 1px dashed var(--border-subtle);
-            padding: 3rem 2rem;
-            text-align: center;
-            background: rgba(255,255,255,0.6);
-        }
-
-        .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 1rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 0.4rem;
-        }
-
-        .empty-state p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        /* ------------ GRID KONTAKTÓW ------------ */
-
-        .contacts-grid {
+        .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.3rem;
         }
 
-        .contact-card {
-            padding: 1.4rem 1.5rem 1.25rem;
-            border-radius: 16px;
+        .card {
+            position: relative;
+            background: var(--surface);
             border: 1px solid var(--border-subtle);
-            background: var(--surface-soft);
-            box-shadow: 0 2px 10px rgba(26,26,26,0.05);
-            transition: transform 0.22s cubic-bezier(0.33, 1, 0.68, 1),
-                        box-shadow 0.22s cubic-bezier(0.33, 1, 0.68, 1),
-                        border-color 0.22s cubic-bezier(0.33, 1, 0.68, 1),
-                        background 0.22s cubic-bezier(0.33, 1, 0.68, 1);
+            border-radius: var(--radius-card);
+            padding: 1.6rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
-        .contact-card:hover {
-            transform: translateY(-4px);
+        .card:hover {
+            transform: translateY(-3px);
             box-shadow: var(--shadow-card);
-            border-color: var(--text-primary);
-            background: #ffffff;
+            border-color: var(--border-strong);
         }
 
-        .contact-header {
+        .card-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            gap: 0.75rem;
-            margin-bottom: 0.85rem;
+            align-items: start;
+            margin-bottom: 1rem;
         }
 
-        .contact-name {
+        .card-title {
             font-family: 'Outfit', sans-serif;
-            font-size: 1.05rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            margin-bottom: 0.15rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
         }
 
-        .contact-actions {
+        .card-meta {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .card-actions {
             display: flex;
-            gap: 0.3rem;
-            flex-shrink: 0;
+            gap: 0.4rem;
         }
 
         .icon-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 999px;
-            border: 1px solid transparent;
-            background: transparent;
+            width: 32px;
+            height: 32px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
             cursor: pointer;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, color 0.18s ease;
+            font-size: 0.9rem;
+            transition: all 0.18s ease;
         }
 
         .icon-btn:hover {
-            background: rgba(26,26,26,0.03);
-            border-color: var(--border-subtle);
-            transform: translateY(-1px);
-            color: var(--text-primary);
+            background: rgba(26,26,26,0.04);
+            border-color: var(--border-strong);
         }
 
         .icon-btn.delete:hover {
-            border-color: rgba(220,38,38,0.4);
+            background: rgba(220, 38, 38, 0.08);
+            border-color: var(--error);
             color: var(--error);
-            background: rgba(248,113,113,0.06);
         }
 
-        .contact-info {
+        .card-body {
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
-            margin-bottom: 0.65rem;
+            gap: 0.7rem;
         }
 
-        .contact-info-row {
+        .card-info-row {
             display: flex;
             align-items: center;
-            gap: 0.45rem;
-            font-size: 0.9rem;
+            gap: 0.6rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
         }
 
-        .contact-info-row span:first-child {
+        .card-info-row .emoji {
             font-size: 1rem;
         }
 
-        .contact-company {
+        .contacts-count {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            padding: 0.25rem 0.9rem;
+            gap: 0.4rem;
+            padding: 0.35rem 0.8rem;
             border-radius: var(--radius-chip);
-            border: 1px solid var(--text-primary);
+            background: rgba(26, 26, 26, 0.06);
             font-family: 'Outfit', sans-serif;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-primary);
+            margin-top: 0.5rem;
+        }
+
+        /* ------------ DETAIL VIEW ------------ */
+
+        .detail-view {
+            display: none;
+        }
+
+        .detail-view.active {
+            display: block;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: var(--radius-chip);
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.12em;
-            background: var(--text-primary);
-            color: #f5f1ed;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(26,26,26,0.03);
+            border-color: var(--border-strong);
+        }
+
+        .detail-card {
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-meta {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .detail-info-row {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .detail-info-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+            color: var(--text-secondary);
+            min-width: 100px;
+        }
+
+        .detail-info-value {
+            font-size: 0.9rem;
+            color: var(--text-primary);
         }
 
         /* ------------ MODAL ------------ */
@@ -557,7 +617,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(26,26,26,0.78);
+            background: rgba(26, 26, 26, 0.6);
             backdrop-filter: blur(4px);
             z-index: 1000;
             align-items: center;
@@ -567,146 +627,194 @@
 
         .modal.active {
             display: flex;
-            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
-            background: var(--bg-primary);
-            border-radius: 20px;
-            border: 1px solid var(--border-subtle);
+            position: relative;
             width: 100%;
             max-width: 520px;
-            padding: 2.1rem 2.3rem 2rem;
-            box-shadow: 0 24px 64px rgba(0,0,0,0.35);
-            animation: slideUp 0.32s ease;
+            background: var(--surface);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border-subtle);
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            gap: 0.5rem;
-            margin-bottom: 1.6rem;
+            align-items: center;
+            margin-bottom: 1.8rem;
         }
 
         .modal-header h2 {
             font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.7rem;
-            letter-spacing: 0.12em;
+            font-size: 1.8rem;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
         }
 
         .close-btn {
-            border: none;
-            background: transparent;
             width: 32px;
             height: 32px;
-            border-radius: 999px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
             cursor: pointer;
-            color: var(--text-secondary);
-            transition: background 0.18s ease, transform 0.18s ease, color 0.18s ease;
+            font-size: 1.3rem;
+            line-height: 1;
+            transition: all 0.18s ease;
         }
 
         .close-btn:hover {
-            background: rgba(26,26,26,0.06);
-            color: var(--text-primary);
-            transform: translateY(-1px);
+            background: rgba(26,26,26,0.04);
+            border-color: var(--border-strong);
         }
 
         .form-group {
-            margin-bottom: 1.1rem;
+            margin-bottom: 1.4rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.45rem;
-            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--text-secondary);
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
-            border-radius: 12px;
+            padding: 0.85rem 1.1rem;
             border: 1px solid var(--border-subtle);
-            background: #ffffff;
-            padding: 0.75rem 0.8rem;
-            font-size: 0.95rem;
+            border-radius: 12px;
+            background: var(--surface);
             font-family: 'Manrope', sans-serif;
-            transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
         }
 
-        .form-group input:focus {
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--text-primary);
-            box-shadow: 0 0 0 1px var(--text-primary);
-            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.08);
         }
 
         .modal-actions {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-top: 1.7rem;
+            gap: 0.8rem;
+            margin-top: 2rem;
         }
 
         .btn {
-            flex: 1 1 120px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1.3rem;
+            flex: 1;
+            padding: 0.85rem 1.4rem;
             border-radius: var(--radius-chip);
             font-family: 'Outfit', sans-serif;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.16em;
+            font-size: 0.72rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
             cursor: pointer;
-            border: 1px solid transparent;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+            transition: all 0.18s ease;
         }
 
         .btn-primary {
+            border: 1px solid var(--text-primary);
             background: var(--text-primary);
-            border-color: var(--text-primary);
             color: #f5f1ed;
         }
 
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 12px 32px rgba(26,26,26,0.26);
+            box-shadow: 0 10px 24px rgba(26,26,26,0.24);
         }
 
         .btn-secondary {
+            border: 1px solid var(--border-strong);
             background: transparent;
-            border-color: var(--border-strong);
             color: var(--text-primary);
         }
 
         .btn-secondary:hover {
             background: rgba(26,26,26,0.03);
             border-color: var(--text-primary);
-            box-shadow: 0 8px 22px rgba(26,26,26,0.18);
-            transform: translateY(-1px);
         }
 
-        @media (max-width: 520px) {
-            .modal-content {
-                padding: 1.7rem 1.4rem 1.5rem;
-                border-radius: 18px;
-            }
+        /* ------------ LOADING & EMPTY ------------ */
 
-            .modal-header h2 {
-                font-size: 1.4rem;
-            }
+        .loading {
+            text-align: center;
+            padding: 4rem 2rem;
         }
 
-        /* ------------ STATUSY ------------ */
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-subtle);
+            border-top-color: var(--text-primary);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 1.2rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading p {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.6rem;
+        }
+
+        .empty-state p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        /* ------------ STATUS MESSAGES ------------ */
 
         .status-message {
             position: fixed;
@@ -756,43 +864,41 @@
             }
         }
 
-        /* ------------ ANIMACJE OGÓLNE ------------ */
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ------------ RESPONSYWNOŚĆ ------------ */
+        /* ------------ RESPONSIVE ------------ */
 
         @media (max-width: 768px) {
+            .app-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.9rem;
+            }
+
+            .app-header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
             .section-header {
+                flex-direction: column;
                 align-items: flex-start;
             }
 
             .toolbar {
                 width: 100%;
-                justify-content: flex-start;
             }
 
-            .contacts-grid {
+            .cards-grid {
                 grid-template-columns: 1fr;
             }
 
             .login-card {
                 padding: 2.2rem 2.0rem 2.1rem;
                 border-radius: 20px;
+            }
+
+            .modal-content {
+                padding: 1.7rem 1.4rem 1.5rem;
+                border-radius: 18px;
             }
         }
 
@@ -801,16 +907,13 @@
                 padding: 2rem 1.6rem 1.9rem;
             }
 
-            .app-logo {
-                font-size: 1.6rem;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-
             .app-inner {
                 padding: 0 1.1rem;
+            }
+
+            .tab-btn {
+                padding: 0.7rem 1rem;
+                font-size: 0.7rem;
             }
         }
     </style>
@@ -822,14 +925,14 @@
             <div class="login-inner">
                 <div class="app-pill">
                     <span class="app-pill-dot"></span>
-                    Mini CRM na Google Sheets
+                    Business CRM
                 </div>
-                <h1 class="app-title">SheetCRM</h1>
-                <p class="app-subtitle">Prosty, nowoczesny interfejs kontaktów</p>
+                <h1 class="app-title">Simplify CRM</h1>
+                <p class="app-subtitle">Zarządzaj firmami i kontaktami</p>
 
                 <p class="app-description">
-                    Zaloguj się swoim kontem Google, aby pracować na kontaktach przechowywanych w dedykowanym arkuszu
-                    „Kontakty”. Całość zaprojektowana w stylistyce Twojego CV – lekko, minimalistycznie, bez zbędnych elementów.
+                    Zaloguj się swoim kontem Google, aby uzyskać dostęp do systemu zarządzania relacjami biznesowymi. 
+                    Organizuj firmy, śledź kontakty i buduj długoterminowe relacje z klientami.
                 </p>
 
                 <button id="loginBtn" class="google-btn" disabled>
@@ -839,15 +942,13 @@
                             <path fill="#34A853" d="M6.6 14.3 5.9 14.8l-2.6 2C5.1 19.9 8.3 21.8 12 21.8c2.7 0 5-.9 6.6-2.4l-3.3-2.6c-.9.6-2 1-3.3 1-2.5 0-4.6-1.7-5.4-4z"/>
                             <path fill="#4A90E2" d="M3.3 8.8C2.8 10 2.5 11.2 2.5 12.5s.3 2.5.8 3.7l3.3-2.6c-.2-.6-.3-1.2-.3-1.9 0-.6.1-1.3.3-1.9L3.3 8.8z"/>
                             <path fill="#FBBC05" d="M12 5.2c1.5 0 2.8.5 3.8 1.4l2.8-2.8C16.9 2.2 14.7 1.2 12 1.2 8.3 1.2 5.1 3.1 3.3 6.2l3.3 2.6c.8-2.3 2.9-3.6 5.4-3.6z"/>
-                            <path fill="none" d="M2.5 2.2h19.1v19.1H2.5z"/>
                         </svg>
                     </span>
                     <span>Zaloguj przez Google</span>
                 </button>
 
                 <p class="login-hint">
-                    Użytkownik widzi tylko ten panel logowania – techniczna konfiguracja (CLIENT_ID, SHEET_ID)
-                    odbywa się w kodzie, poza interfejsem.
+                    Bezpieczne logowanie przez Google OAuth. Twoje dane są przechowywane w sposób szyfrowany.
                 </p>
             </div>
         </div>
@@ -858,8 +959,8 @@
         <div class="app-inner">
             <header class="app-header">
                 <div class="app-header-left">
-                    <div class="app-logo">SheetCRM</div>
-                    <div class="app-logo-subtitle">Kontakty oparte na Google Sheets</div>
+                    <div class="app-logo">Simplify CRM</div>
+                    <div class="app-logo-subtitle">Zarządzanie relacjami biznesowymi</div>
                 </div>
                 <div class="app-header-right">
                     <span class="user-email" id="userEmail"></span>
@@ -867,54 +968,162 @@
                 </div>
             </header>
 
-            <main class="app-main">
+            <!-- TABS -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="companies">Firmy</button>
+                <button class="tab-btn" data-tab="contacts">Wszyscy kontakty</button>
+            </div>
+
+            <!-- TAB: COMPANIES LIST -->
+            <div id="companiesTab" class="tab-content active">
+                <div id="companiesListView">
+                    <div class="section-header">
+                        <div class="section-title-block">
+                            <h1 class="section-title">Firmy</h1>
+                            <div class="section-underline"></div>
+                            <p class="section-subtitle">
+                                Zarządzaj listą firm, z którymi współpracujesz. Każda firma może mieć przypisanych wielu kontaktów.
+                            </p>
+                        </div>
+                        <div class="toolbar">
+                            <button id="addCompanyBtn" class="add-btn">
+                                <span class="plus">+</span>
+                                <span>Dodaj firmę</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="companiesLoading" class="loading">
+                        <div class="spinner"></div>
+                        <p>Ładowanie firm...</p>
+                    </div>
+
+                    <div id="companiesEmpty" class="empty-state" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                        <h3>Brak firm</h3>
+                        <p>Dodaj pierwszą firmę, aby rozpocząć pracę w CRM.</p>
+                    </div>
+
+                    <div id="companiesGrid" class="cards-grid"></div>
+                </div>
+
+                <!-- COMPANY DETAIL VIEW -->
+                <div id="companyDetailView" class="detail-view">
+                    <button id="backToCompaniesBtn" class="back-btn">
+                        <span>←</span>
+                        <span>Powrót do listy firm</span>
+                    </button>
+
+                    <div class="detail-card">
+                        <div id="companyDetailContent"></div>
+                    </div>
+
+                    <div class="section-header">
+                        <div class="section-title-block">
+                            <h1 class="section-title">Kontakty w firmie</h1>
+                            <div class="section-underline"></div>
+                        </div>
+                        <div class="toolbar">
+                            <button id="addCompanyContactBtn" class="add-btn">
+                                <span class="plus">+</span>
+                                <span>Dodaj kontakt</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="companyContactsEmpty" class="empty-state" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        <h3>Brak kontaktów</h3>
+                        <p>Dodaj pierwszy kontakt dla tej firmy.</p>
+                    </div>
+
+                    <div id="companyContactsGrid" class="cards-grid"></div>
+                </div>
+            </div>
+
+            <!-- TAB: ALL CONTACTS -->
+            <div id="contactsTab" class="tab-content">
                 <div class="section-header">
                     <div class="section-title-block">
-                        <h1 class="section-title">Kontakty</h1>
+                        <h1 class="section-title">Wszyscy kontakty</h1>
                         <div class="section-underline"></div>
                         <p class="section-subtitle">
-                            Jedna, przejrzysta lista wszystkich osób, z którymi pracujesz. Dane zapisują się bezpośrednio
-                            w arkuszu Google.
+                            Kompletna lista wszystkich osób kontaktowych z różnych firm.
                         </p>
-                    </div>
-                    <div class="toolbar">
-                        <button id="addContactBtn" class="add-btn">
-                            <span class="plus">+</span>
-                            <span>Dodaj kontakt</span>
-                        </button>
                     </div>
                 </div>
 
-                <div id="loadingState" class="loading">
+                <div id="contactsLoading" class="loading" style="display: none;">
                     <div class="spinner"></div>
                     <p>Ładowanie kontaktów...</p>
                 </div>
 
-                <div id="emptyState" class="empty-state" style="display: none;">
+                <div id="contactsEmpty" class="empty-state" style="display: none;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
                     <h3>Brak kontaktów</h3>
-                    <p>Dodaj pierwszy kontakt, aby rozpocząć pracę w CRM.</p>
+                    <p>Dodaj kontakty do firm, aby wyświetlić je tutaj.</p>
                 </div>
 
-                <div id="contactsGrid" class="contacts-grid"></div>
-            </main>
+                <div id="contactsGrid" class="cards-grid"></div>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL -->
+    <!-- MODAL: ADD/EDIT COMPANY -->
+    <div id="companyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="companyModalTitle">Dodaj firmę</h2>
+                <button class="close-btn" id="closeCompanyModalBtn">&times;</button>
+            </div>
+            <form id="companyForm">
+                <div class="form-group">
+                    <label for="companyName">Nazwa firmy *</label>
+                    <input type="text" id="companyName" required>
+                </div>
+                <div class="form-group">
+                    <label for="companyIndustry">Branża</label>
+                    <input type="text" id="companyIndustry" placeholder="np. IT, Marketing, Finanse">
+                </div>
+                <div class="form-group">
+                    <label for="companyNotes">Notatki</label>
+                    <textarea id="companyNotes" placeholder="Dodatkowe informacje o firmie"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelCompanyBtn">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD/EDIT CONTACT -->
     <div id="contactModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">Dodaj kontakt</h2>
-                <button class="close-btn" id="closeModalBtn">&times;</button>
+                <h2 id="contactModalTitle">Dodaj kontakt</h2>
+                <button class="close-btn" id="closeContactModalBtn">&times;</button>
             </div>
             <form id="contactForm">
                 <div class="form-group">
+                    <label for="contactCompany">Firma *</label>
+                    <select id="contactCompany" required>
+                        <option value="">Wybierz firmę</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="contactName">Imię i nazwisko *</label>
                     <input type="text" id="contactName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactPosition">Stanowisko</label>
+                    <input type="text" id="contactPosition" placeholder="np. CEO, Marketing Manager">
                 </div>
                 <div class="form-group">
                     <label for="contactEmail">Email</label>
@@ -924,25 +1133,21 @@
                     <label for="contactPhone">Telefon</label>
                     <input type="tel" id="contactPhone">
                 </div>
-                <div class="form-group">
-                    <label for="contactCompany">Firma</label>
-                    <input type="text" id="contactCompany">
-                </div>
                 <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelBtn">Anuluj</button>
+                    <button type="button" class="btn btn-secondary" id="cancelContactBtn">Anuluj</button>
                     <button type="submit" class="btn btn-primary">Zapisz</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- KONFIGURACJA GOOGLE -->
+    <!-- GOOGLE API INIT -->
     <script>
-        // KONFIGURACJA - ZMIEŃ TE WARTOŚCI!
         const CONFIG = {
-            CLIENT_ID: '567555578754-nsqdiab9suu01a9i1mdgc30vf5g9rq2k.apps.googleusercontent.com',
-            SHEET_ID: '1A4vT2_sQnM48Q74jLPqGIT27P8NRdzKwiOsiDdMByJ0',
-            SHEET_NAME: 'Kontakty',
+            CLIENT_ID: 'YOUR_CLIENT_ID.apps.googleusercontent.com',
+            SHEET_ID: 'YOUR_SHEET_ID',
+            COMPANIES_SHEET: 'Firmy',
+            CONTACTS_SHEET: 'Kontakty',
             SCOPES: 'https://www.googleapis.com/auth/spreadsheets'
         };
 
@@ -961,32 +1166,29 @@
                     apiKey: '',
                     discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
                 });
-
                 gapiInited = true;
                 console.log('✓ GAPI client initialized');
                 maybeEnableButtons();
             } catch (err) {
                 console.error('✗ Błąd inicjalizacji GAPI client:', err);
-                showStatus('Błąd inicjalizacji Google API', 'error');
+                showStatus('Błąd inicjalizacji', 'error');
             }
         }
 
         function gisLoaded() {
             console.log('✓ Google Identity Services (GIS) loaded');
-
             try {
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CONFIG.CLIENT_ID,
                     scope: CONFIG.SCOPES,
                     callback: '',
                 });
-
                 gisInited = true;
                 console.log('✓ GIS token client initialized');
                 maybeEnableButtons();
             } catch (err) {
-                console.error('✗ Błąd inicjalizacji Google Identity Services:', err);
-                showStatus('Błąd konfiguracji logowania', 'error');
+                console.error('✗ Błąd inicjalizacji GIS:', err);
+                showStatus('Błąd konfiguracji - sprawdź CLIENT_ID', 'error');
             }
         }
 
@@ -995,7 +1197,7 @@
                 const loginBtn = document.getElementById('loginBtn');
                 if (loginBtn) {
                     loginBtn.disabled = false;
-                    console.log('✓ Wszystko załadowane - przycisk logowania aktywny');
+                    console.log('✓ Wszystko załadowane');
                 }
             }
         }
@@ -1005,27 +1207,18 @@
             msg.className = 'status-message' + (type ? ' ' + type : '');
             msg.textContent = message;
             document.body.appendChild(msg);
-
-            setTimeout(() => {
-                msg.remove();
-            }, 3200);
+            setTimeout(() => msg.remove(), 3200);
         }
 
         setTimeout(() => {
             if (!gapiInited || !gisInited) {
-                console.error('✗ Timeout: Google APIs nie załadowały się w ciągu 10 sekund');
-                console.log('- gapiInited:', gapiInited);
-                console.log('- gisInited:', gisInited);
-                console.log('- typeof gapi:', typeof gapi);
-                console.log('- typeof google:', typeof google);
-
+                console.error('✗ Timeout: Google APIs nie załadowały się');
                 const loginBtn = document.getElementById('loginBtn');
                 if (loginBtn) {
                     loginBtn.disabled = true;
-                    loginBtn.textContent = '⚠️ Błąd ładowania logowania';
+                    loginBtn.textContent = '⚠️ Błąd ładowania';
                 }
-
-                showStatus('Nie udało się wczytać logowania Google. Sprawdź połączenie internetowe.', 'error');
+                showStatus('Nie udało się załadować logowania. Sprawdź połączenie.', 'error');
             }
         }, 10000);
     </script>
@@ -1033,22 +1226,24 @@
     <script src="https://apis.google.com/js/api.js" async defer onload="gapiLoaded()"></script>
     <script src="https://accounts.google.com/gsi/client" async defer onload="gisLoaded()"></script>
 
-    <!-- LOGIKA CRM -->
+    <!-- CRM LOGIC -->
     <script>
         let accessToken = null;
+        let companies = [];
         let contacts = [];
-        let editingIndex = null;
+        let editingCompanyIndex = null;
+        let editingContactIndex = null;
+        let currentCompanyId = null;
 
+        // AUTH
         function handleAuthClick() {
-            if (CONFIG.CLIENT_ID === 'YOUR_CLIENT_ID.apps.googleusercontent.com') {
-                showStatus('Błąd: Musisz ustawić CLIENT_ID w kodzie!', 'error');
-                console.error('CLIENT_ID nie jest skonfigurowany. Sprawdź instrukcję setup.');
+            if (CONFIG.CLIENT_ID === '567555578754-nsqdiab9suu01a9i1mdgc30vf5g9rq2k.apps.googleusercontent.com') {
+                showStatus('Błąd: Ustaw CLIENT_ID w kodzie!', 'error');
                 return;
             }
 
             if (!tokenClient) {
-                showStatus('Błąd: Google Identity Services nie załadowane', 'error');
-                console.error('tokenClient is undefined. Google Identity Services nie załadowały się poprawnie.');
+                showStatus('Błąd: Google nie załadowane', 'error');
                 return;
             }
 
@@ -1061,15 +1256,14 @@
 
                 try {
                     accessToken = gapi.client.getToken().access_token;
-
                     const userInfo = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
                         headers: { Authorization: `Bearer ${accessToken}` }
                     }).then(r => r.json());
 
                     showApp(userInfo.email || '');
-                    loadContacts();
+                    await loadData();
                 } catch (err) {
-                    console.error('Błąd pobierania danych użytkownika:', err);
+                    console.error('Błąd pobierania danych:', err);
                     showStatus('Błąd pobierania danych użytkownika', 'error');
                 }
             };
@@ -1082,7 +1276,7 @@
                 }
             } catch (err) {
                 console.error('Błąd requestAccessToken:', err);
-                showStatus('Błąd podczas autoryzacji', 'error');
+                showStatus('Błąd autoryzacji', 'error');
             }
         }
 
@@ -1105,91 +1299,400 @@
         function showLogin() {
             document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('appScreen').classList.remove('active');
+            companies = [];
             contacts = [];
-            renderContacts();
         }
 
-        async function loadContacts() {
-            if (!CONFIG.SHEET_ID || CONFIG.SHEET_ID === 'YOUR_SHEET_ID') {
-                showStatus('Błąd: Brak skonfigurowanego arkusza Google Sheets', 'error');
-                console.error('SHEET_ID nie jest skonfigurowany.');
-                showEmptyState();
+        // DATA LOADING
+        async function loadData() {
+            if (!CONFIG.SHEET_ID || CONFIG.SHEET_ID === '1A4vT2_sQnM48Q74jLPqGIT27P8NRdzKwiOsiDdMByJ0') {
+                showStatus('Błąd: Brak SHEET_ID', 'error');
                 return;
             }
 
-            showLoading(true);
+            await Promise.all([loadCompanies(), loadContacts()]);
+        }
+
+        async function loadCompanies() {
+            document.getElementById('companiesLoading').style.display = 'block';
+            document.getElementById('companiesGrid').innerHTML = '';
 
             try {
                 const response = await gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId: CONFIG.SHEET_ID,
-                    range: `${CONFIG.SHEET_NAME}!A2:D`,
+                    range: `${CONFIG.COMPANIES_SHEET}!A2:D`,
+                });
+
+                const rows = response.result.values || [];
+                companies = rows.map(row => ({
+                    id: row[0] || '',
+                    name: row[1] || '',
+                    industry: row[2] || '',
+                    notes: row[3] || ''
+                }));
+
+                renderCompanies();
+                showStatus('Firmy załadowane', 'success');
+            } catch (err) {
+                console.error('Błąd ładowania firm:', err);
+                showStatus('Błąd ładowania firm', 'error');
+                document.getElementById('companiesEmpty').style.display = 'block';
+            }
+
+            document.getElementById('companiesLoading').style.display = 'none';
+        }
+
+        async function loadContacts() {
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range: `${CONFIG.CONTACTS_SHEET}!A2:G`,
                 });
 
                 const rows = response.result.values || [];
                 contacts = rows.map(row => ({
-                    name: row[0] || '',
-                    email: row[1] || '',
-                    phone: row[2] || '',
-                    company: row[3] || ''
+                    id: row[0] || '',
+                    companyId: row[1] || '',
+                    name: row[2] || '',
+                    position: row[3] || '',
+                    email: row[4] || '',
+                    phone: row[5] || ''
                 }));
 
-                renderContacts();
-                showStatus('Kontakty załadowane', 'success');
+                renderAllContacts();
             } catch (err) {
-                console.error('Błąd ładowania:', err);
-                let errorMsg = 'Błąd ładowania kontaktów';
-                if (err.result && err.result.error) {
-                    errorMsg += ': ' + err.result.error.message;
-                }
-                showStatus(errorMsg, 'error');
-                showEmptyState();
+                console.error('Błąd ładowania kontaktów:', err);
             }
-
-            showLoading(false);
         }
 
-        async function saveContact(contact) {
+        // RENDER COMPANIES
+        function renderCompanies() {
+            const grid = document.getElementById('companiesGrid');
+            const empty = document.getElementById('companiesEmpty');
+
+            if (companies.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            grid.innerHTML = companies.map((company, index) => {
+                const companyContacts = contacts.filter(c => c.companyId === company.id);
+                return `
+                    <div class="card" onclick="viewCompanyDetail('${company.id}')">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">${escapeHtml(company.name)}</div>
+                                ${company.industry ? `<div class="card-meta">${escapeHtml(company.industry)}</div>` : ''}
+                            </div>
+                            <div class="card-actions" onclick="event.stopPropagation()">
+                                <button class="icon-btn" onclick="editCompany(${index})" title="Edytuj">✏️</button>
+                                <button class="icon-btn delete" onclick="deleteCompany(${index})" title="Usuń">🗑️</button>
+                            </div>
+                        </div>
+                        ${company.notes ? `
+                            <div class="card-body">
+                                <div class="card-info-row">
+                                    <span class="emoji">📝</span>
+                                    <span>${escapeHtml(company.notes.substring(0, 100))}${company.notes.length > 100 ? '...' : ''}</span>
+                                </div>
+                            </div>
+                        ` : ''}
+                        <div class="contacts-count">
+                            <span>👥</span>
+                            <span>${companyContacts.length} ${companyContacts.length === 1 ? 'kontakt' : 'kontaktów'}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // RENDER CONTACTS
+        function renderAllContacts() {
+            const grid = document.getElementById('contactsGrid');
+            const empty = document.getElementById('contactsEmpty');
+
+            if (contacts.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            grid.innerHTML = contacts.map((contact, index) => {
+                const company = companies.find(c => c.id === contact.companyId);
+                return `
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">${escapeHtml(contact.name)}</div>
+                                ${contact.position ? `<div class="card-meta">${escapeHtml(contact.position)}</div>` : ''}
+                            </div>
+                            <div class="card-actions">
+                                <button class="icon-btn" onclick="editContact(${index})" title="Edytuj">✏️</button>
+                                <button class="icon-btn delete" onclick="deleteContact(${index})" title="Usuń">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            ${company ? `
+                                <div class="card-info-row">
+                                    <span class="emoji">🏢</span>
+                                    <span>${escapeHtml(company.name)}</span>
+                                </div>
+                            ` : ''}
+                            ${contact.email ? `
+                                <div class="card-info-row">
+                                    <span class="emoji">📧</span>
+                                    <span>${escapeHtml(contact.email)}</span>
+                                </div>
+                            ` : ''}
+                            ${contact.phone ? `
+                                <div class="card-info-row">
+                                    <span class="emoji">📱</span>
+                                    <span>${escapeHtml(contact.phone)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // COMPANY DETAIL VIEW
+        function viewCompanyDetail(companyId) {
+            currentCompanyId = companyId;
+            const company = companies.find(c => c.id === companyId);
+            if (!company) return;
+
+            document.getElementById('companiesListView').style.display = 'none';
+            document.getElementById('companyDetailView').classList.add('active');
+
+            document.getElementById('companyDetailContent').innerHTML = `
+                <div class="detail-title">${escapeHtml(company.name)}</div>
+                ${company.industry ? `<div class="detail-meta">${escapeHtml(company.industry)}</div>` : ''}
+                <div class="detail-info">
+                    ${company.notes ? `
+                        <div class="detail-info-row">
+                            <div class="detail-info-label">Notatki</div>
+                            <div class="detail-info-value">${escapeHtml(company.notes)}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            renderCompanyContacts(companyId);
+        }
+
+        function renderCompanyContacts(companyId) {
+            const companyContacts = contacts.filter(c => c.companyId === companyId);
+            const grid = document.getElementById('companyContactsGrid');
+            const empty = document.getElementById('companyContactsEmpty');
+
+            if (companyContacts.length === 0) {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+
+            empty.style.display = 'none';
+            grid.innerHTML = companyContacts.map((contact, index) => {
+                const globalIndex = contacts.findIndex(c => c.id === contact.id);
+                return `
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">${escapeHtml(contact.name)}</div>
+                                ${contact.position ? `<div class="card-meta">${escapeHtml(contact.position)}</div>` : ''}
+                            </div>
+                            <div class="card-actions">
+                                <button class="icon-btn" onclick="editContact(${globalIndex})" title="Edytuj">✏️</button>
+                                <button class="icon-btn delete" onclick="deleteContact(${globalIndex})" title="Usuń">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            ${contact.email ? `
+                                <div class="card-info-row">
+                                    <span class="emoji">📧</span>
+                                    <span>${escapeHtml(contact.email)}</span>
+                                </div>
+                            ` : ''}
+                            ${contact.phone ? `
+                                <div class="card-info-row">
+                                    <span class="emoji">📱</span>
+                                    <span>${escapeHtml(contact.phone)}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function backToCompaniesList() {
+            document.getElementById('companyDetailView').classList.remove('active');
+            document.getElementById('companiesListView').style.display = 'block';
+            currentCompanyId = null;
+        }
+
+        // COMPANY CRUD
+        function openCompanyModal() {
+            editingCompanyIndex = null;
+            document.getElementById('companyModalTitle').textContent = 'Dodaj firmę';
+            document.getElementById('companyForm').reset();
+            document.getElementById('companyModal').classList.add('active');
+        }
+
+        function editCompany(index) {
+            editingCompanyIndex = index;
+            const company = companies[index];
+            document.getElementById('companyModalTitle').textContent = 'Edytuj firmę';
+            document.getElementById('companyName').value = company.name;
+            document.getElementById('companyIndustry').value = company.industry;
+            document.getElementById('companyNotes').value = company.notes;
+            document.getElementById('companyModal').classList.add('active');
+        }
+
+        async function saveCompany(e) {
+            e.preventDefault();
+            
+            const company = {
+                id: editingCompanyIndex !== null ? companies[editingCompanyIndex].id : generateId(),
+                name: document.getElementById('companyName').value,
+                industry: document.getElementById('companyIndustry').value,
+                notes: document.getElementById('companyNotes').value
+            };
+
             try {
-                const values = [[
-                    contact.name || '',
-                    contact.email || '',
-                    contact.phone || '',
-                    contact.company || ''
-                ]];
+                const values = [[company.id, company.name, company.industry, company.notes]];
 
-                if (!CONFIG.SHEET_ID || CONFIG.SHEET_ID === 'YOUR_SHEET_ID') {
-                    showStatus('Błąd: Brak skonfigurowanego arkusza Google Sheets', 'error');
-                    console.error('SHEET_ID nie jest skonfigurowany.');
-                    return;
-                }
-
-                if (editingIndex !== null) {
-                    const range = `${CONFIG.SHEET_NAME}!A${editingIndex + 2}:D${editingIndex + 2}`;
+                if (editingCompanyIndex !== null) {
+                    const range = `${CONFIG.COMPANIES_SHEET}!A${editingCompanyIndex + 2}:D${editingCompanyIndex + 2}`;
                     await gapi.client.sheets.spreadsheets.values.update({
                         spreadsheetId: CONFIG.SHEET_ID,
                         range: range,
                         valueInputOption: 'USER_ENTERED',
                         resource: { values }
                     });
+                    companies[editingCompanyIndex] = company;
+                    showStatus('Firma zaktualizowana', 'success');
+                } else {
+                    await gapi.client.sheets.spreadsheets.values.append({
+                        spreadsheetId: CONFIG.SHEET_ID,
+                        range: `${CONFIG.COMPANIES_SHEET}!A:D`,
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                    companies.push(company);
+                    showStatus('Firma dodana', 'success');
+                }
 
-                    contacts[editingIndex] = contact;
+                renderCompanies();
+                updateCompanySelects();
+                closeCompanyModal();
+            } catch (err) {
+                console.error('Błąd zapisu firmy:', err);
+                showStatus('Błąd zapisu firmy', 'error');
+            }
+        }
+
+        async function deleteCompany(index) {
+            if (!confirm('Czy na pewno chcesz usunąć tę firmę? Kontakty w niej pozostaną.')) return;
+
+            try {
+                const range = `${CONFIG.COMPANIES_SHEET}!A${index + 2}:D${index + 2}`;
+                await gapi.client.sheets.spreadsheets.values.clear({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range: range
+                });
+
+                companies.splice(index, 1);
+                renderCompanies();
+                showStatus('Firma usunięta', 'success');
+                await loadCompanies();
+            } catch (err) {
+                console.error('Błąd usuwania firmy:', err);
+                showStatus('Błąd usuwania firmy', 'error');
+            }
+        }
+
+        function closeCompanyModal() {
+            document.getElementById('companyModal').classList.remove('active');
+            document.getElementById('companyForm').reset();
+            editingCompanyIndex = null;
+        }
+
+        // CONTACT CRUD
+        function openContactModal(preselectedCompanyId = null) {
+            editingContactIndex = null;
+            document.getElementById('contactModalTitle').textContent = 'Dodaj kontakt';
+            document.getElementById('contactForm').reset();
+            updateCompanySelects();
+            
+            if (preselectedCompanyId) {
+                document.getElementById('contactCompany').value = preselectedCompanyId;
+            }
+            
+            document.getElementById('contactModal').classList.add('active');
+        }
+
+        function editContact(index) {
+            editingContactIndex = index;
+            const contact = contacts[index];
+            document.getElementById('contactModalTitle').textContent = 'Edytuj kontakt';
+            updateCompanySelects();
+            document.getElementById('contactCompany').value = contact.companyId;
+            document.getElementById('contactName').value = contact.name;
+            document.getElementById('contactPosition').value = contact.position;
+            document.getElementById('contactEmail').value = contact.email;
+            document.getElementById('contactPhone').value = contact.phone;
+            document.getElementById('contactModal').classList.add('active');
+        }
+
+        async function saveContact(e) {
+            e.preventDefault();
+            
+            const contact = {
+                id: editingContactIndex !== null ? contacts[editingContactIndex].id : generateId(),
+                companyId: document.getElementById('contactCompany').value,
+                name: document.getElementById('contactName').value,
+                position: document.getElementById('contactPosition').value,
+                email: document.getElementById('contactEmail').value,
+                phone: document.getElementById('contactPhone').value
+            };
+
+            try {
+                const values = [[contact.id, contact.companyId, contact.name, contact.position, contact.email, contact.phone]];
+
+                if (editingContactIndex !== null) {
+                    const range = `${CONFIG.CONTACTS_SHEET}!A${editingContactIndex + 2}:F${editingContactIndex + 2}`;
+                    await gapi.client.sheets.spreadsheets.values.update({
+                        spreadsheetId: CONFIG.SHEET_ID,
+                        range: range,
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values }
+                    });
+                    contacts[editingContactIndex] = contact;
                     showStatus('Kontakt zaktualizowany', 'success');
                 } else {
                     await gapi.client.sheets.spreadsheets.values.append({
                         spreadsheetId: CONFIG.SHEET_ID,
-                        range: `${CONFIG.SHEET_NAME}!A:D`,
+                        range: `${CONFIG.CONTACTS_SHEET}!A:F`,
                         valueInputOption: 'USER_ENTERED',
                         resource: { values }
                     });
-
                     contacts.push(contact);
                     showStatus('Kontakt dodany', 'success');
                 }
 
-                renderContacts();
-                closeModal();
+                renderAllContacts();
+                renderCompanies();
+                if (currentCompanyId) {
+                    renderCompanyContacts(currentCompanyId);
+                }
+                closeContactModal();
             } catch (err) {
-                console.error('Błąd zapisu:', err);
+                console.error('Błąd zapisu kontaktu:', err);
                 showStatus('Błąd zapisu kontaktu', 'error');
             }
         }
@@ -1198,100 +1701,41 @@
             if (!confirm('Czy na pewno chcesz usunąć ten kontakt?')) return;
 
             try {
-                const range = `${CONFIG.SHEET_NAME}!A${index + 2}:D${index + 2}`;
+                const range = `${CONFIG.CONTACTS_SHEET}!A${index + 2}:F${index + 2}`;
                 await gapi.client.sheets.spreadsheets.values.clear({
                     spreadsheetId: CONFIG.SHEET_ID,
                     range: range
                 });
 
                 contacts.splice(index, 1);
-                renderContacts();
+                renderAllContacts();
+                renderCompanies();
+                if (currentCompanyId) {
+                    renderCompanyContacts(currentCompanyId);
+                }
                 showStatus('Kontakt usunięty', 'success');
-
                 await loadContacts();
             } catch (err) {
-                console.error('Błąd usuwania:', err);
+                console.error('Błąd usuwania kontaktu:', err);
                 showStatus('Błąd usuwania kontaktu', 'error');
             }
         }
 
-        function renderContacts() {
-            const grid = document.getElementById('contactsGrid');
-            const emptyState = document.getElementById('emptyState');
-
-            if (!contacts.length) {
-                grid.innerHTML = '';
-                emptyState.style.display = 'block';
-                return;
-            }
-
-            emptyState.style.display = 'none';
-
-            grid.innerHTML = contacts.map((contact, index) => `
-                <div class="contact-card">
-                    <div class="contact-header">
-                        <div>
-                            <div class="contact-name">${escapeHtml(contact.name || 'Bez nazwy')}</div>
-                        </div>
-                        <div class="contact-actions">
-                            <button class="icon-btn" onclick="editContact(${index})" title="Edytuj">
-                                ✏️
-                            </button>
-                            <button class="icon-btn delete" onclick="deleteContact(${index})" title="Usuń">
-                                🗑️
-                            </button>
-                        </div>
-                    </div>
-                    <div class="contact-info">
-                        ${contact.email ? `
-                            <div class="contact-info-row">
-                                <span>📧</span>
-                                <span>${escapeHtml(contact.email)}</span>
-                            </div>` : ''}
-                        ${contact.phone ? `
-                            <div class="contact-info-row">
-                                <span>📱</span>
-                                <span>${escapeHtml(contact.phone)}</span>
-                            </div>` : ''}
-                    </div>
-                    ${contact.company ? `
-                        <div class="contact-company">${escapeHtml(contact.company)}</div>` : ''}
-                </div>
-            `).join('');
-        }
-
-        function showLoading(show) {
-            document.getElementById('loadingState').style.display = show ? 'block' : 'none';
-            document.getElementById('contactsGrid').style.display = show ? 'none' : 'grid';
-        }
-
-        function showEmptyState() {
-            document.getElementById('emptyState').style.display = 'block';
-            document.getElementById('contactsGrid').innerHTML = '';
-        }
-
-        function openModal() {
-            document.getElementById('contactModal').classList.add('active');
-        }
-
-        function closeModal() {
+        function closeContactModal() {
             document.getElementById('contactModal').classList.remove('active');
             document.getElementById('contactForm').reset();
-            editingIndex = null;
-            document.getElementById('modalTitle').textContent = 'Dodaj kontakt';
+            editingContactIndex = null;
         }
 
-        function editContact(index) {
-            editingIndex = index;
-            const contact = contacts[index];
+        function updateCompanySelects() {
+            const select = document.getElementById('contactCompany');
+            select.innerHTML = '<option value="">Wybierz firmę</option>' +
+                companies.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+        }
 
-            document.getElementById('modalTitle').textContent = 'Edytuj kontakt';
-            document.getElementById('contactName').value = contact.name || '';
-            document.getElementById('contactEmail').value = contact.email || '';
-            document.getElementById('contactPhone').value = contact.phone || '';
-            document.getElementById('contactCompany').value = contact.company || '';
-
-            openModal();
+        // HELPERS
+        function generateId() {
+            return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         }
 
         function escapeHtml(text) {
@@ -1300,31 +1744,44 @@
             return div.innerHTML;
         }
 
+        // EVENT LISTENERS
         document.addEventListener('DOMContentLoaded', () => {
+            // Auth
             document.getElementById('loginBtn').addEventListener('click', handleAuthClick);
             document.getElementById('logoutBtn').addEventListener('click', handleSignoutClick);
 
-            document.getElementById('addContactBtn').addEventListener('click', openModal);
-            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-            document.getElementById('cancelBtn').addEventListener('click', closeModal);
-
-            document.getElementById('contactForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                const contact = {
-                    name: document.getElementById('contactName').value,
-                    email: document.getElementById('contactEmail').value,
-                    phone: document.getElementById('contactPhone').value,
-                    company: document.getElementById('contactCompany').value
-                };
-
-                saveContact(contact);
+            // Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+                });
             });
 
-            document.getElementById('contactModal').addEventListener('click', (e) => {
-                if (e.target.id === 'contactModal') {
-                    closeModal();
-                }
+            // Companies
+            document.getElementById('addCompanyBtn').addEventListener('click', openCompanyModal);
+            document.getElementById('closeCompanyModalBtn').addEventListener('click', closeCompanyModal);
+            document.getElementById('cancelCompanyBtn').addEventListener('click', closeCompanyModal);
+            document.getElementById('companyForm').addEventListener('submit', saveCompany);
+            document.getElementById('backToCompaniesBtn').addEventListener('click', backToCompaniesList);
+
+            // Contacts
+            document.getElementById('addCompanyContactBtn').addEventListener('click', () => {
+                openContactModal(currentCompanyId);
+            });
+            document.getElementById('closeContactModalBtn').addEventListener('click', closeContactModal);
+            document.getElementById('cancelContactBtn').addEventListener('click', closeContactModal);
+            document.getElementById('contactForm').addEventListener('submit', saveContact);
+
+            // Close modals on background click
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
             });
         });
     </script>
