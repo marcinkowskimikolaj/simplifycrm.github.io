@@ -1690,25 +1690,25 @@
             </div>
             <form id="contactForm">
                 <div class="form-group">
-                    <label for="contactName">Imię i nazwisko *</label>
-                    <input type="text" id="contactName" required>
-                </div>
-                <div class="form-group">
-                    <label for="contactCompanyInput">Firma <span class="optional">(opcjonalnie)</span></label>
-                    <div class="company-picker">
-                        <input type="text" id="contactCompanyInput" placeholder="Zacznij pisać nazwę firmy...">
-                        <input type="hidden" id="contactCompanyId">
-                        <div id="companySuggestions" class="company-suggestions"></div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="contactPosition">Stanowisko <span class="optional">(opcjonalnie)</span></label>
-                    <input type="text" id="contactPosition" placeholder="np. CEO, Marketing Manager">
-                </div>
-                <div class="form-group">
-                    <label for="contactEmail">Email <span class="optional">(opcjonalnie)</span></label>
-                    <input type="email" id="contactEmail">
-                </div>
+    <label for="contactName">Imię i nazwisko *</label>
+    <input type="text" id="contactName" required>
+</div>
+<div class="form-group">
+    <label for="contactEmail">Email <span class="optional">(opcjonalnie)</span></label>
+    <input type="email" id="contactEmail" placeholder="np. jan@techcorp.pl">
+</div>
+<div class="form-group">
+    <label for="contactCompanyInput">Firma <span class="optional">(opcjonalnie)</span></label>
+    <div class="company-picker">
+        <input type="text" id="contactCompanyInput" placeholder="Zacznij pisać nazwę firmy...">
+        <input type="hidden" id="contactCompanyId">
+        <div id="companySuggestions" class="company-suggestions"></div>
+    </div>
+</div>
+<div class="form-group">
+    <label for="contactPosition">Stanowisko <span class="optional">(opcjonalnie)</span></label>
+    <input type="text" id="contactPosition" placeholder="np. CEO, Marketing Manager">
+</div>
                 <div class="form-group">
                     <label for="contactPhone">Telefon <span class="optional">(opcjonalnie)</span></label>
                     <input type="tel" id="contactPhone">
@@ -2452,12 +2452,10 @@ function renderAllContacts() {
             }
 
             document.getElementById('companyDetailContent').innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
-                    <div class="detail-title">${escapeHtml(company.name)}</div>
-                    <button class="btn btn-secondary" onclick="editCompanyFromDetail('${company.id}')" style="flex-shrink: 0; padding: 0.6rem 1rem;">
-                        ✏️ Edytuj
-                    </button>
-                </div>
+<div style="position: relative;">
+    <button class="icon-btn" onclick="editCompanyFromDetail('${company.id}')" title="Edytuj firmę" style="position: absolute; top: 0; right: 0;">✏️</button>
+    <div class="detail-title">${escapeHtml(company.name)}</div>
+</div>
                 <div>
                 ${company.industry ? `<div class="detail-meta">${escapeHtml(company.industry)}</div>` : ''}
                 <div class="detail-info">
@@ -2580,8 +2578,11 @@ function renderAllContacts() {
                 `;
             }
 
-            document.getElementById('contactDetailContent').innerHTML = `
-                <div class="detail-title">${escapeHtml(contact.name)}</div>
+document.getElementById('contactDetailContent').innerHTML = `
+    <div style="position: relative;">
+        <button class="icon-btn" onclick="editContactFromDetail('${contact.id}')" title="Edytuj kontakt" style="position: absolute; top: 0; right: 0;">✏️</button>
+        <div class="detail-title">${escapeHtml(contact.name)}</div>
+    </div>
                 ${contact.position ? `<div class="detail-meta">${escapeHtml(contact.position)}</div>` : ''}
                 <div class="detail-info">
                     ${infoHtml}
@@ -3372,14 +3373,21 @@ function renderAllContacts() {
             document.getElementById('logoutBtn').addEventListener('click', handleSignoutClick);
 
             // tabs
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-                    btn.classList.add('active');
-                    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
-                });
-            });
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Reset detail views when switching tabs
+        if (btn.dataset.tab === 'contacts') {
+            backToContactsList();
+        } else if (btn.dataset.tab === 'companies') {
+            backToCompaniesList();
+        }
+        
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+    });
+});
 
             // global search
             const globalSearchInput = document.getElementById('globalSearchInput');
@@ -3454,6 +3462,49 @@ function renderAllContacts() {
                 });
             }
 
+if (companySuggestionsEl) {
+                companySuggestionsEl.addEventListener('click', (e) => {
+                    const item = e.target.closest('.company-suggestion-item');
+                    if (!item) return;
+
+                    if (item.dataset.id) {
+                        const company = companies.find(c => c.id === item.dataset.id);
+                        if (company) {
+                            companyInputEl.value = company.name;
+                            companyIdEl.value = company.id;
+                        }
+                    } else if (item.classList.contains('company-suggestion-new')) {
+                        // nic – tworzenie firmy nastąpi przy zapisie kontaktu
+                    }
+
+                    hideCompanySuggestions();
+                });
+            }
+
+            // Auto-match company by email domain
+            const contactEmailEl = document.getElementById('contactEmail');
+            if (contactEmailEl && companyInputEl && companyIdEl) {
+                contactEmailEl.addEventListener('blur', () => {
+                    const email = contactEmailEl.value.trim();
+                    if (!email || !email.includes('@')) return;
+                    
+                    // Only auto-fill if company field is empty
+                    if (companyInputEl.value.trim() || companyIdEl.value) return;
+                    
+                    const domain = extractDomain(email);
+                    const matchedCompany = findCompanyByDomain(domain);
+                    
+                    if (matchedCompany) {
+                        companyInputEl.value = matchedCompany.name;
+                        companyIdEl.value = matchedCompany.id;
+                        showStatus(`🎯 Auto-dopasowano firmę: ${matchedCompany.name}`, 'success');
+                    }
+                });
+            }
+
+            // note modal
+            noteEntityTypeEl = document.getElementById('noteEntityType');
+            
             // note modal
             noteEntityTypeEl = document.getElementById('noteEntityType');
             noteEntityIdEl = document.getElementById('noteEntityId');
