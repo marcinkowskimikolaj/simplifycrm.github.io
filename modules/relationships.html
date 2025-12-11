@@ -3312,7 +3312,11 @@ async function assignTagToEntity(entityId, tagId, type) {
         } else if (type === 'contact' && currentContactId === entityId) {
             viewContactDetail(entityId);
         }
+    } catch (error) {
+        console.error('Błąd przypisywania etykiety:', error);
+        showStatus('Błąd przypisywania etykiety', 'error');
     }
+}
 
     /**
      * Render tags in detail view (with remove buttons)
@@ -3457,11 +3461,7 @@ async function assignTagToEntity(entityId, tagId, type) {
             console.error('Błąd usuwania etykiety:', error);
             showStatus('Błąd usuwania etykiety', 'error');
         }
-    } catch (error) {
-        console.error('Error assigning tag:', error);
-        showStatus('Błąd przy przypisywaniu etykiety', 'error');
     }
-}
 
 async function removeTagFromEntity(entityId, tagId, type) {
     try {
