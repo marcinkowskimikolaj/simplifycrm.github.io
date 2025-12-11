@@ -1667,7 +1667,14 @@
                         </p>
                     </div>
                     <div class="toolbar">
-                        <div class="view-switcher">
+                                                <!-- Tags Manager Icon -->
+                        <button class="tags-manager-icon" onclick="openTagsManager('contacts')" title="Zarządzaj etykietami">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                            </svg>
+                        </button>
+<div class="view-switcher">
                             <button class="view-btn active" data-view="grid" title="Widok kafelków" onclick="switchContactsView('grid')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="7" height="7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1782,7 +1789,14 @@
                         </p>
                     </div>
                     <div class="toolbar">
-                        <div class="view-switcher">
+                                                <!-- Tags Manager Icon -->
+                        <button class="tags-manager-icon" onclick="openTagsManager('companies')" title="Zarządzaj etykietami">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                            </svg>
+                        </button>
+<div class="view-switcher">
                             <button class="view-btn active" data-view="grid" title="Widok kafelków" onclick="switchCompaniesView('grid')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="7" height="7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2125,6 +2139,7 @@
         // ============= DATA LOADING =============
         async function loadData() {
             await Promise.all([loadCompanies(), loadContacts()]);
+            await loadTagsData();
             await Promise.all([loadCompanyHistory(), loadContactHistory()]);
         }
 
@@ -2302,7 +2317,7 @@
                                 </div>
                             </div>
                             ${infoRows ? `<div class="card-body">${infoRows}</div>` : ''}
-                            \${renderEntityTags(company.id, \'company\')}
+                            ${renderEntityTags(company.id, 'company')}
                             <div class="card-badge"><span>👥</span><span>${companyContacts.length} kontaktów</span></div>
                         </div>
                     `;
@@ -2392,6 +2407,7 @@
                                 ${contact.email ? `<div class="card-info-row"><span class="emoji">📧</span><span>${escapeHtml(contact.email)}</span></div>` : ''}
                                 ${contact.phone ? `<div class="card-info-row"><span class="emoji">📱</span><span>${escapeHtml(contact.phone)}</span></div>` : ''}
                             </div>
+                            ${renderEntityTags(contact.id, 'contact')}
                         </div>
                     `;
                 }).join('');
@@ -2473,7 +2489,8 @@
                             ${contact.email ? `<div class="card-info-row"><span class="emoji">📧</span><span>${escapeHtml(contact.email)}</span></div>` : ''}
                             ${contact.phone ? `<div class="card-info-row"><span class="emoji">📱</span><span>${escapeHtml(contact.phone)}</span></div>` : ''}
                         </div>
-                    </div>
+                            ${renderEntityTags(contact.id, 'contact')}
+                        </div>
                 `;
             }).join('');
         }
@@ -3671,4 +3688,3 @@ async function loadTagsData() {
 
 </body>
 </html>
-            await loadTagsData();
