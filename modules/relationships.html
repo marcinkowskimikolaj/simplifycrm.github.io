@@ -2258,11 +2258,75 @@
             }
         }
 
-        async function saveContact(e) {
+async function saveContact(e) {
             e.preventDefault();
             const typedCompanyName = (companyInputEl?.value || '').trim();
             let selectedCompanyId = companyIdEl?.value || '';
-            const email = document.getElementById('contactEmail').value;
+            
+            // Pobieramy wartości do sprawdzenia
+            const email = document.getElementById('contactEmail').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+
+            // === DETEKCJA DUPLIKATÓW ===
+            // Używamy flagi w obiekcie window, aby pominąć sprawdzanie przy "Zapisz mimo to"
+            if (!window.skipDuplicateCheck) {
+                const currentId = editingContactIndex !== null ? contacts[editingContactIndex].id : null;
+                
+                // Szukamy duplikatu (pomijamy samych siebie przy edycji)
+                const duplicate = contacts.find(c => {
+                    if (c.id === currentId) return false;
+                    
+                    const matchEmail = email && c.email && c.email.toLowerCase() === email.toLowerCase();
+                    // Proste oczyszczanie telefonu ze spacji i myślników do porównania
+                    const cleanPhoneInput = phone.replace(/[\s-]/g, '');
+                    const cleanPhoneStored = (c.phone || '').replace(/[\s-]/g, '');
+                    const matchPhone = cleanPhoneInput && cleanPhoneStored && cleanPhoneInput === cleanPhoneStored;
+                    
+                    return matchEmail || matchPhone;
+                });
+
+                if (duplicate) {
+                    const modal = document.getElementById('duplicateModal');
+                    const content = document.getElementById('duplicateContent');
+                    const saveAnywayBtn = document.getElementById('saveAnywayBtn');
+                    const backBtn = document.getElementById('backToEditBtn');
+
+                    // Wypełnij treść ostrzeżenia
+                    content.innerHTML = `
+                        <div>Znaleziono kontakt o podobnych danych:</div>
+                        <div style="background:rgba(15,23,42,0.05); padding:10px; border-radius:8px; margin-top:10px;">
+                            <strong>${escapeHtml(duplicate.name)}</strong><br>
+                            ${duplicate.email ? `<small>📧 ${escapeHtml(duplicate.email)}</small><br>` : ''}
+                            ${duplicate.phone ? `<small>📱 ${escapeHtml(duplicate.phone)}</small>` : ''}
+                        </div>
+                        <div style="margin-top:10px; font-size:0.85rem;">Czy na pewno chcesz utworzyć kolejny?</div>
+                    `;
+
+                    // Pokaż modal
+                    modal.classList.add('active');
+
+                    // Obsługa przycisku "Zapisz mimo to"
+                    // Nadpisujemy onclick, aby nie dodawać wielu listenerów
+                    saveAnywayBtn.onclick = () => {
+                        window.skipDuplicateCheck = true; // Ustaw flagę
+                        modal.classList.remove('active');
+                        // Ponowne wywołanie submita formularza - tym razem wejdzie w if(!window.skipDuplicateCheck) jako false
+                        document.getElementById('contactForm').requestSubmit(); 
+                    };
+
+                    // Obsługa przycisku "Wróć do edycji"
+                    backBtn.onclick = () => {
+                        modal.classList.remove('active');
+                        // Czyścimy flagę na wszelki wypadek
+                        window.skipDuplicateCheck = false;
+                    };
+
+                    return; // PRZERYWAMY ZAPIS
+                }
+            }
+            // Reset flagi po udanym przejściu (lub przy pierwszym czystym zapisie)
+            window.skipDuplicateCheck = false;
+            // === KONIEC DETEKCJI DUPLIKATÓW ===
 
             // Auto-match by domain
             if (!typedCompanyName && !selectedCompanyId && email) {
