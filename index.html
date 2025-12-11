@@ -2143,13 +2143,15 @@
 
         // RENDER COMPANIES
 
-        function renderCompanies() {
+function renderCompanies() {
             const grid = document.getElementById('companiesGrid');
+            const listView = document.getElementById('companiesList');
             const empty = document.getElementById('companiesEmpty');
             const list = getFilteredCompanies();
 
             if (companies.length === 0) {
                 grid.innerHTML = '';
+                if (listView) listView.innerHTML = '';
                 empty.style.display = 'block';
                 empty.querySelector('h3').textContent = 'Brak firm';
                 empty.querySelector('p').textContent = 'Dodaj pierwszą firmę, aby rozpocząć pracę w CRM.';
@@ -2158,6 +2160,7 @@
 
             if (list.length === 0) {
                 grid.innerHTML = '';
+                if (listView) listView.innerHTML = '';
                 empty.style.display = 'block';
                 empty.querySelector('h3').textContent = 'Brak wyników';
                 empty.querySelector('p').textContent = 'Brak firm dla aktualnego wyszukiwania.';
@@ -2165,81 +2168,123 @@
             }
 
             empty.style.display = 'none';
-            grid.innerHTML = list.map(company => {
-                const companyContacts = contacts.filter(c => c.companyId === company.id);
 
-                let infoRows = '';
-
-                if (company.website) {
-                    infoRows += `
-                        <div class="card-info-row">
-                            <span class="emoji">🌐</span>
-                            <span>${escapeHtml(company.website)}</span>
-                        </div>
-                    `;
-                }
-
-                if (company.phone) {
-                    infoRows += `
-                        <div class="card-info-row">
-                            <span class="emoji">📞</span>
-                            <span>${escapeHtml(company.phone)}</span>
-                        </div>
-                    `;
-                }
-
-                if (company.city || company.country) {
-                    const loc = [company.city, company.country].filter(Boolean).join(', ');
-                    infoRows += `
-                        <div class="card-info-row">
-                            <span class="emoji">📍</span>
-                            <span>${escapeHtml(loc)}</span>
-                        </div>
-                    `;
-                }
-
-                if (company.notes) {
-                    infoRows += `
-                        <div class="card-info-row">
-                            <span class="emoji">📝</span>
-                            <span>${escapeHtml(company.notes.substring(0, 100))}${company.notes.length > 100 ? '...' : ''}</span>
-                        </div>
-                    `;
-                }
-
-                const idx = companies.indexOf(company);
-
-                return `
-                    <div class="card clickable" onclick="viewCompanyDetail('${company.id}')">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">${escapeHtml(company.name)}</div>
-                                ${company.industry ? `<div class="card-meta">${escapeHtml(company.industry)}</div>` : ''}
-                            </div>
-                            <div class="card-actions" onclick="event.stopPropagation()">
-                                <button class="icon-btn" onclick="editCompany(${idx})" title="Edytuj">✏️</button>
-                                <button class="icon-btn delete" onclick="deleteCompany(${idx})" title="Usuń">🗑️</button>
-                            </div>
-                        </div>
-                        ${infoRows ? `<div class="card-body">${infoRows}</div>` : ''}
-                        <div class="card-badge">
-                            <span>👥</span>
-                            <span>${companyContacts.length} ${companyContacts.length === 1 ? 'kontakt' : companyContacts.length < 5 ? 'kontakty' : 'kontaktów'}</span>
-                        </div>
-                    </div>
+            if (companiesViewMode === 'list' && listView) {
+                // LIST VIEW
+                listView.innerHTML = `
+                    <table class="list-view-table">
+                        <thead>
+                            <tr>
+                                <th>Nazwa firmy</th>
+                                <th>Branża</th>
+                                <th>Miasto</th>
+                                <th>Telefon</th>
+                                <th>Kontakty</th>
+                                <th style="width: 100px;">Akcje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${list.map(company => {
+                                const companyContacts = contacts.filter(c => c.companyId === company.id);
+                                const idx = companies.indexOf(company);
+                                return `
+                                    <tr onclick="viewCompanyDetail('${company.id}')">
+                                        <td><strong>${escapeHtml(company.name)}</strong></td>
+                                        <td>${company.industry ? escapeHtml(company.industry) : '-'}</td>
+                                        <td>${company.city ? escapeHtml(company.city) : '-'}</td>
+                                        <td>${company.phone ? escapeHtml(company.phone) : '-'}</td>
+                                        <td>👥 ${companyContacts.length}</td>
+                                        <td onclick="event.stopPropagation()">
+                                            <div class="actions-cell">
+                                                <button class="icon-btn" onclick="editCompany(${idx})" title="Edytuj">✏️</button>
+                                                <button class="icon-btn delete" onclick="deleteCompany(${idx})" title="Usuń">🗑️</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
                 `;
-            }).join('');
+            } else {
+                // GRID VIEW
+                grid.innerHTML = list.map(company => {
+                    const companyContacts = contacts.filter(c => c.companyId === company.id);
+                    let infoRows = '';
+
+                    if (company.website) {
+                        infoRows += `
+                            <div class="card-info-row">
+                                <span class="emoji">🌐</span>
+                                <span>${escapeHtml(company.website)}</span>
+                            </div>
+                        `;
+                    }
+
+                    if (company.phone) {
+                        infoRows += `
+                            <div class="card-info-row">
+                                <span class="emoji">📞</span>
+                                <span>${escapeHtml(company.phone)}</span>
+                            </div>
+                        `;
+                    }
+
+                    if (company.city || company.country) {
+                        const loc = [company.city, company.country].filter(Boolean).join(', ');
+                        infoRows += `
+                            <div class="card-info-row">
+                                <span class="emoji">📍</span>
+                                <span>${escapeHtml(loc)}</span>
+                            </div>
+                        `;
+                    }
+
+                    if (company.notes) {
+                        infoRows += `
+                            <div class="card-info-row">
+                                <span class="emoji">📝</span>
+                                <span>${escapeHtml(company.notes.substring(0, 100))}${company.notes.length > 100 ? '...' : ''}</span>
+                            </div>
+                        `;
+                    }
+
+                    const idx = companies.indexOf(company);
+
+                    return `
+                        <div class="card clickable" onclick="viewCompanyDetail('${company.id}')">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">${escapeHtml(company.name)}</div>
+                                    ${company.industry ? `<div class="card-meta">${escapeHtml(company.industry)}</div>` : ''}
+                                </div>
+                                <div class="card-actions" onclick="event.stopPropagation()">
+                                    <button class="icon-btn" onclick="editCompany(${idx})" title="Edytuj">✏️</button>
+                                    <button class="icon-btn delete" onclick="deleteCompany(${idx})" title="Usuń">🗑️</button>
+                                </div>
+                            </div>
+                            ${infoRows ? `<div class="card-body">${infoRows}</div>` : ''}
+                            <div class="card-badge">
+                                <span>👥</span>
+                                <span>${companyContacts.length} ${companyContacts.length === 1 ? 'kontakt' : companyContacts.length < 5 ? 'kontakty' : 'kontaktów'}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         // RENDER CONTACTS (LIST)
 
-        function renderAllContacts() {
+function renderAllContacts() {
             const grid = document.getElementById('contactsGrid');
+            const listView = document.getElementById('contactsList');
             const empty = document.getElementById('contactsEmpty');
             const list = getFilteredContacts();
 
             if (contacts.length === 0) {
                 grid.innerHTML = '';
+                if (listView) listView.innerHTML = '';
                 empty.style.display = 'block';
                 empty.querySelector('h3').textContent = 'Brak kontaktów';
                 empty.querySelector('p').textContent = 'Dodaj pierwszy kontakt, aby rozpocząć pracę w CRM.';
@@ -2248,6 +2293,7 @@
 
             if (list.length === 0) {
                 grid.innerHTML = '';
+                if (listView) listView.innerHTML = '';
                 empty.style.display = 'block';
                 empty.querySelector('h3').textContent = 'Brak wyników';
                 empty.querySelector('p').textContent = 'Brak kontaktów dla aktualnego wyszukiwania.';
@@ -2255,48 +2301,89 @@
             }
 
             empty.style.display = 'none';
-            grid.innerHTML = list.map(contact => {
-                const index = contacts.findIndex(c => c.id === contact.id);
-                const company = companies.find(c => c.id === contact.companyId);
-                return `
-                    <div class="card clickable" onclick="viewContactDetail('${contact.id}')">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">${escapeHtml(contact.name)}</div>
-                                ${contact.position ? `<div class="card-meta">${escapeHtml(contact.position)}</div>` : ''}
-                            </div>
-                            <div class="card-actions" onclick="event.stopPropagation()">
-                                <button class="icon-btn" onclick="editContact(${index})" title="Edytuj">✏️</button>
-                                <button class="icon-btn delete" onclick="deleteContact(${index})" title="Usuń">🗑️</button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            ${company ? `
-                                <div class="card-info-row">
-                                    <span class="emoji">🏢</span>
-                                    <span onclick="viewCompanyDetail('${company.id}')" style="cursor:pointer;text-decoration:underline;">${escapeHtml(company.name)}</span>
-                                </div>
-                            ` : `
-                                <div class="card-badge no-company">
-                                    <span>⚠️</span><span>Brak firmy</span>
-                                </div>
-                            `}
-                            ${contact.email ? `
-                                <div class="card-info-row">
-                                    <span class="emoji">📧</span>
-                                    <span>${escapeHtml(contact.email)}</span>
-                                </div>
-                            ` : ''}
-                            ${contact.phone ? `
-                                <div class="card-info-row">
-                                    <span class="emoji">📱</span>
-                                    <span>${escapeHtml(contact.phone)}</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
+
+            if (contactsViewMode === 'list' && listView) {
+                // LIST VIEW
+                listView.innerHTML = `
+                    <table class="list-view-table">
+                        <thead>
+                            <tr>
+                                <th>Imię i nazwisko</th>
+                                <th>Firma</th>
+                                <th>Stanowisko</th>
+                                <th>Email</th>
+                                <th>Telefon</th>
+                                <th style="width: 100px;">Akcje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${list.map(contact => {
+                                const index = contacts.findIndex(c => c.id === contact.id);
+                                const company = companies.find(c => c.id === contact.companyId);
+                                return `
+                                    <tr onclick="viewContactDetail('${contact.id}')">
+                                        <td><strong>${escapeHtml(contact.name)}</strong></td>
+                                        <td>${company ? escapeHtml(company.name) : '<span style="color: var(--text-secondary); font-style: italic;">Brak firmy</span>'}</td>
+                                        <td>${contact.position ? escapeHtml(contact.position) : '-'}</td>
+                                        <td>${contact.email ? escapeHtml(contact.email) : '-'}</td>
+                                        <td>${contact.phone ? escapeHtml(contact.phone) : '-'}</td>
+                                        <td onclick="event.stopPropagation()">
+                                            <div class="actions-cell">
+                                                <button class="icon-btn" onclick="editContact(${index})" title="Edytuj">✏️</button>
+                                                <button class="icon-btn delete" onclick="deleteContact(${index})" title="Usuń">🗑️</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
                 `;
-            }).join('');
+            } else {
+                // GRID VIEW
+                grid.innerHTML = list.map(contact => {
+                    const index = contacts.findIndex(c => c.id === contact.id);
+                    const company = companies.find(c => c.id === contact.companyId);
+                    return `
+                        <div class="card clickable" onclick="viewContactDetail('${contact.id}')">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">${escapeHtml(contact.name)}</div>
+                                    ${contact.position ? `<div class="card-meta">${escapeHtml(contact.position)}</div>` : ''}
+                                </div>
+                                <div class="card-actions" onclick="event.stopPropagation()">
+                                    <button class="icon-btn" onclick="editContact(${index})" title="Edytuj">✏️</button>
+                                    <button class="icon-btn delete" onclick="deleteContact(${index})" title="Usuń">🗑️</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                ${company ? `
+                                    <div class="card-info-row">
+                                        <span class="emoji">🏢</span>
+                                        <span onclick="viewCompanyDetail('${company.id}')" style="cursor:pointer;text-decoration:underline;">${escapeHtml(company.name)}</span>
+                                    </div>
+                                ` : `
+                                    <div class="card-badge no-company">
+                                        <span>⚠️</span><span>Brak firmy</span>
+                                    </div>
+                                `}
+                                ${contact.email ? `
+                                    <div class="card-info-row">
+                                        <span class="emoji">📧</span>
+                                        <span>${escapeHtml(contact.email)}</span>
+                                    </div>
+                                ` : ''}
+                                ${contact.phone ? `
+                                    <div class="card-info-row">
+                                        <span class="emoji">📱</span>
+                                        <span>${escapeHtml(contact.phone)}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         // COMPANY DETAIL
