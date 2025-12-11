@@ -428,22 +428,50 @@
             }
         });
 
-        // Timeout dla ładowania bibliotek
-        setTimeout(() => {
-            if (!gapiInited || !gisInited) {
-                loginBtn.disabled = true;
-                loginBtnText.textContent = '⚠️ Błąd ładowania';
-                showStatus('Nie udało się załadować bibliotek Google. Sprawdź połączenie.', 'error');
-            }
-        }, 10000);
+// Timeout dla ładowania bibliotek (backup)
+setTimeout(() => {
+    if (!gapiInited || !gisInited) {
+        loginBtn.disabled = true;
+        loginBtnText.textContent = '⚠️ Błąd ładowania';
+        showStatus('Nie udało się załadować bibliotek Google. Odśwież stronę (Ctrl+Shift+R).', 'error');
+    }
+}, 15000);
 
-        // Wywołaj funkcje jeśli skrypty już załadowane
-        if (typeof gapi !== 'undefined') {
-            window.gapiLoaded();
-        }
-        if (typeof google !== 'undefined' && google.accounts) {
-            window.gisLoaded();
-        }
+// Polling mechanism - sprawdzaj czy skrypty się załadowały
+let checkCount = 0;
+const maxChecks = 75; // 75 × 200ms = 15 sekund
+
+function checkScriptsLoaded() {
+    checkCount++;
+    
+    // Sprawdź GAPI
+    if (!gapiInited && typeof gapi !== 'undefined') {
+        console.log('✓ GAPI wykryte - inicjalizacja...');
+        window.gapiLoaded();
+    }
+    
+    // Sprawdź GIS
+    if (!gisInited && typeof google !== 'undefined' && google.accounts) {
+        console.log('✓ GIS wykryte - inicjalizacja...');
+        window.gisLoaded();
+    }
+    
+    // Jeśli oba załadowane - koniec
+    if (gapiInited && gisInited) {
+        console.log('✓ Wszystkie biblioteki gotowe!');
+        return;
+    }
+    
+    // Jeśli nie przekroczono limitu - sprawdź ponownie
+    if (checkCount < maxChecks) {
+        setTimeout(checkScriptsLoaded, 200);
+    } else {
+        console.error('✗ Timeout - biblioteki nie załadowały się w czasie');
+    }
+}
+
+// Start polling po 500ms (daj szansę skryptom zacząć ładowanie)
+setTimeout(checkScriptsLoaded, 500);
     </script>
 </body>
 </html>
