@@ -494,6 +494,403 @@ export class DataService {
     }
 }
 
+
+    // ============= TAGS FOR COMPANIES =============
+
+/**
+ * TAGS (Companies) - Load all company tags
+ */
+static async loadCompanyTags(useCache = true) {
+    const cacheKey = 'tags_companies';
+    
+    if (useCache) {
+        const cached = this.getCache(cacheKey);
+        if (cached) {
+            console.log('✓ Etykiety firm załadowane z cache');
+            return cached;
+        }
+    }
+
+    return this.retryRequest(async () => {
+        const response = await gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range: `${CONFIG.SHEETS.TAGS_COMPANIES}!A2:F`,
+        });
+
+        const rows = response.result.values || [];
+        const tags = rows.map(row => ({
+            id: row[0] || this.generateId(),
+            name: row[1] || '',
+            color: row[2] || '#3b82f6',
+            description: row[3] || '',
+            createdBy: row[4] || '',
+            createdAt: row[5] || ''
+        })).filter(t => t.name);
+
+        this.setCache(cacheKey, tags);
+        console.log(`✓ Załadowano ${tags.length} etykiet firm`);
+        return tags;
+    });
+}
+
+/**
+ * TAGS (Companies) - Save (Create or Update)
+ */
+static async saveCompanyTag(tag, rowIndex = null) {
+    const values = [[
+        tag.id || this.generateId(),
+        tag.name || '',
+        tag.color || '#3b82f6',
+        tag.description || '',
+        tag.createdBy || AuthService.getUserEmail() || '',
+        tag.createdAt || new Date().toISOString()
+    ]];
+
+    const isUpdate = rowIndex !== null;
+    const range = isUpdate
+        ? `${CONFIG.SHEETS.TAGS_COMPANIES}!A${rowIndex + 2}:F${rowIndex + 2}`
+        : `${CONFIG.SHEETS.TAGS_COMPANIES}!A:F`;
+
+    return this.retryRequest(async () => {
+        if (isUpdate) {
+            await gapi.client.sheets.spreadsheets.values.update({
+                spreadsheetId: CONFIG.SHEET_ID,
+                range,
+                valueInputOption: 'USER_ENTERED',
+                resource: { values }
+            });
+            console.log('✓ Etykieta firmy zaktualizowana:', tag.name);
+        } else {
+            await gapi.client.sheets.spreadsheets.values.append({
+                spreadsheetId: CONFIG.SHEET_ID,
+                range,
+                valueInputOption: 'USER_ENTERED',
+                resource: { values }
+            });
+            console.log('✓ Etykieta firmy dodana:', tag.name);
+        }
+
+        this.clearCache('tags_companies');
+        return values[0][0]; // Return ID
+    });
+}
+
+/**
+ * TAGS (Companies) - Delete
+ */
+static async deleteCompanyTag(rowIndex) {
+    const range = `${CONFIG.SHEETS.TAGS_COMPANIES}!A${rowIndex + 2}:F${rowIndex + 2}`;
+
+    return this.retryRequest(async () => {
+        await gapi.client.sheets.spreadsheets.values.clear({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range
+        });
+        
+        this.clearCache('tags_companies');
+        console.log('✓ Etykieta firmy usunięta');
+    });
+}
+
+/**
+ * COMPANY-TAG RELATIONS - Load
+ */
+static async loadCompanyTagRelations(companyId = null, useCache = true) {
+    const cacheKey = companyId ? `company_tags_${companyId}` : 'company_tag_relations';
+    
+    if (useCache) {
+        const cached = this.getCache(cacheKey);
+        if (cached) {
+            console.log('✓ Relacje etykiet firm załadowane z cache');
+            return cached;
+        }
+    }
+
+    return this.retryRequest(async () => {
+        const response = await gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range: `${CONFIG.SHEETS.COMPANY_TAGS_RELATIONS}!A2:E`,
+        });
+
+        const rows = response.result.values || [];
+        let relations = rows.map(row => ({
+            id: row[0] || '',
+            companyId: row[1] || '',
+            tagId: row[2] || '',
+            assignedBy: row[3] || '',
+            assignedAt: row[4] || ''
+        })).filter(r => r.companyId && r.tagId);
+
+        if (companyId) {
+            relations = relations.filter(r => r.companyId === companyId);
+        }
+
+        this.setCache(cacheKey, relations);
+        console.log(`✓ Załadowano ${relations.length} relacji etykiet firm`);
+        return relations;
+    });
+}
+
+/**
+ * COMPANY-TAG RELATIONS - Assign tag to company
+ */
+static async assignTagToCompany(companyId, tagId) {
+    const values = [[
+        this.generateId(),
+        companyId,
+        tagId,
+        AuthService.getUserEmail() || '',
+        new Date().toISOString()
+    ]];
+
+    return this.retryRequest(async () => {
+        await gapi.client.sheets.spreadsheets.values.append({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range: `${CONFIG.SHEETS.COMPANY_TAGS_RELATIONS}!A:E`,
+            valueInputOption: 'USER_ENTERED',
+            resource: { values }
+        });
+
+        this.clearCache(`company_tags_${companyId}`);
+        this.clearCache('company_tag_relations');
+        console.log('✓ Etykieta przypisana do firmy');
+        return values[0][0];
+    });
+}
+
+/**
+ * COMPANY-TAG RELATIONS - Remove tag from company
+ */
+static async removeTagFromCompany(relationId, rowIndex) {
+    const range = `${CONFIG.SHEETS.COMPANY_TAGS_RELATIONS}!A${rowIndex + 2}:E${rowIndex + 2}`;
+
+    return this.retryRequest(async () => {
+        await gapi.client.sheets.spreadsheets.values.clear({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range
+        });
+        
+        this.clearCache('company_tag_relations');
+        console.log('✓ Etykieta usunięta z firmy');
+    });
+}
+
+// ============= TAGS FOR CONTACTS =============
+
+/**
+ * TAGS (Contacts) - Load all contact tags
+ */
+static async loadContactTags(useCache = true) {
+    const cacheKey = 'tags_contacts';
+    
+    if (useCache) {
+        const cached = this.getCache(cacheKey);
+        if (cached) {
+            console.log('✓ Etykiety kontaktów załadowane z cache');
+            return cached;
+        }
+    }
+
+    return this.retryRequest(async () => {
+        const response = await gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range: `${CONFIG.SHEETS.TAGS_CONTACTS}!A2:F`,
+        });
+
+        const rows = response.result.values || [];
+        const tags = rows.map(row => ({
+            id: row[0] || this.generateId(),
+            name: row[1] || '',
+            color: row[2] || '#3b82f6',
+            description: row[3] || '',
+            createdBy: row[4] || '',
+            createdAt: row[5] || ''
+        })).filter(t => t.name);
+
+        this.setCache(cacheKey, tags);
+        console.log(`✓ Załadowano ${tags.length} etykiet kontaktów`);
+        return tags;
+    });
+}
+
+/**
+ * TAGS (Contacts) - Save (Create or Update)
+ */
+static async saveContactTag(tag, rowIndex = null) {
+    const values = [[
+        tag.id || this.generateId(),
+        tag.name || '',
+        tag.color || '#3b82f6',
+        tag.description || '',
+        tag.createdBy || AuthService.getUserEmail() || '',
+        tag.createdAt || new Date().toISOString()
+    ]];
+
+    const isUpdate = rowIndex !== null;
+    const range = isUpdate
+        ? `${CONFIG.SHEETS.TAGS_CONTACTS}!A${rowIndex + 2}:F${rowIndex + 2}`
+        : `${CONFIG.SHEETS.TAGS_CONTACTS}!A:F`;
+
+    return this.retryRequest(async () => {
+        if (isUpdate) {
+            await gapi.client.sheets.spreadsheets.values.update({
+                spreadsheetId: CONFIG.SHEET_ID,
+                range,
+                valueInputOption: 'USER_ENTERED',
+                resource: { values }
+            });
+            console.log('✓ Etykieta kontaktu zaktualizowana:', tag.name);
+        } else {
+            await gapi.client.sheets.spreadsheets.values.append({
+                spreadsheetId: CONFIG.SHEET_ID,
+                range,
+                valueInputOption: 'USER_ENTERED',
+                resource: { values }
+            });
+            console.log('✓ Etykieta kontaktu dodana:', tag.name);
+        }
+
+        this.clearCache('tags_contacts');
+        return values[0][0]; // Return ID
+    });
+}
+
+/**
+ * TAGS (Contacts) - Delete
+ */
+static async deleteContactTag(rowIndex) {
+    const range = `${CONFIG.SHEETS.TAGS_CONTACTS}!A${rowIndex + 2}:F${rowIndex + 2}`;
+
+    return this.retryRequest(async () => {
+        await gapi.client.sheets.spreadsheets.values.clear({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range
+        });
+        
+        this.clearCache('tags_contacts');
+        console.log('✓ Etykieta kontaktu usunięta');
+    });
+}
+
+/**
+ * CONTACT-TAG RELATIONS - Load
+ */
+static async loadContactTagRelations(contactId = null, useCache = true) {
+    const cacheKey = contactId ? `contact_tags_${contactId}` : 'contact_tag_relations';
+    
+    if (useCache) {
+        const cached = this.getCache(cacheKey);
+        if (cached) {
+            console.log('✓ Relacje etykiet kontaktów załadowane z cache');
+            return cached;
+        }
+    }
+
+    return this.retryRequest(async () => {
+        const response = await gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range: `${CONFIG.SHEETS.CONTACT_TAGS_RELATIONS}!A2:E`,
+        });
+
+        const rows = response.result.values || [];
+        let relations = rows.map(row => ({
+            id: row[0] || '',
+            contactId: row[1] || '',
+            tagId: row[2] || '',
+            assignedBy: row[3] || '',
+            assignedAt: row[4] || ''
+        })).filter(r => r.contactId && r.tagId);
+
+        if (contactId) {
+            relations = relations.filter(r => r.contactId === contactId);
+        }
+
+        this.setCache(cacheKey, relations);
+        console.log(`✓ Załadowano ${relations.length} relacji etykiet kontaktów`);
+        return relations;
+    });
+}
+
+/**
+ * CONTACT-TAG RELATIONS - Assign tag to contact
+ */
+static async assignTagToContact(contactId, tagId) {
+    const values = [[
+        this.generateId(),
+        contactId,
+        tagId,
+        AuthService.getUserEmail() || '',
+        new Date().toISOString()
+    ]];
+
+    return this.retryRequest(async () => {
+        await gapi.client.sheets.spreadsheets.values.append({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range: `${CONFIG.SHEETS.CONTACT_TAGS_RELATIONS}!A:E`,
+            valueInputOption: 'USER_ENTERED',
+            resource: { values }
+        });
+
+        this.clearCache(`contact_tags_${contactId}`);
+        this.clearCache('contact_tag_relations');
+        console.log('✓ Etykieta przypisana do kontaktu');
+        return values[0][0];
+    });
+}
+
+/**
+ * CONTACT-TAG RELATIONS - Remove tag from contact
+ */
+static async removeTagFromContact(relationId, rowIndex) {
+    const range = `${CONFIG.SHEETS.CONTACT_TAGS_RELATIONS}!A${rowIndex + 2}:E${rowIndex + 2}`;
+
+    return this.retryRequest(async () => {
+        await gapi.client.sheets.spreadsheets.values.clear({
+            spreadsheetId: CONFIG.SHEET_ID,
+            range
+        });
+        
+        this.clearCache('contact_tag_relations');
+        console.log('✓ Etykieta usunięta z kontaktu');
+    });
+}
+
+// ============= UTILITY METHODS =============
+
+/**
+ * Get tags for specific company
+ */
+static getCompanyTags(companyId, allTags, allRelations) {
+    const relations = allRelations.filter(r => r.companyId === companyId);
+    return relations.map(r => allTags.find(t => t.id === r.tagId)).filter(Boolean);
+}
+
+/**
+ * Get tags for specific contact
+ */
+static getContactTags(contactId, allTags, allRelations) {
+    const relations = allRelations.filter(r => r.contactId === contactId);
+    return relations.map(r => allTags.find(t => t.id === r.tagId)).filter(Boolean);
+}
+
+/**
+ * Get companies by tag
+ */
+static getCompaniesByTag(tagId, allCompanies, allRelations) {
+    const relations = allRelations.filter(r => r.tagId === tagId);
+    const companyIds = relations.map(r => r.companyId);
+    return allCompanies.filter(c => companyIds.includes(c.id));
+}
+
+/**
+ * Get contacts by tag
+ */
+static getContactsByTag(tagId, allContacts, allRelations) {
+    const relations = allRelations.filter(r => r.tagId === tagId);
+    const contactIds = relations.map(r => r.contactId);
+    return allContacts.filter(c => contactIds.includes(c.id));
+}
+
 // Export dla kompatybilności bez ES6 modules
 if (typeof window !== 'undefined') {
     window.DataService = DataService;
