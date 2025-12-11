@@ -2187,7 +2187,7 @@
                             </div>
                             ${infoRows ? `<div class="card-body">${infoRows}</div>` : ''}
                             
-                            ${renderEntityTags(company.id, \'company\')}
+                            ${renderEntityTags(company.id, 'company')}
                             <div class="card-badge"><span>👥</span><span>${companyContacts.length} kontaktów</span></div>
                         </div>
                     `;
@@ -2277,7 +2277,7 @@
                                 ${contact.email ? `<div class="card-info-row"><span class="emoji">📧</span><span>${escapeHtml(contact.email)}</span></div>` : ''}
                                 ${contact.phone ? `<div class="card-info-row"><span class="emoji">📱</span><span>${escapeHtml(contact.phone)}</span></div>` : ''}
                             
-                            ${renderEntityTags(contact.id, \'contact\')}
+                            ${renderEntityTags(contact.id, 'contact')}
                         </div>
                         </div>
                     `;
