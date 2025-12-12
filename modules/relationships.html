@@ -614,6 +614,10 @@
         /* HISTORY */
 
         .history-header {
+            margin-bottom: 1rem;
+        }
+
+        .history-header-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -626,6 +630,12 @@
             font-size: 1.7rem;
             letter-spacing: 0.12em;
             text-transform: uppercase;
+        }
+
+        .history-action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
         }
 
         .history-controls {
@@ -653,6 +663,36 @@
             letter-spacing: 0.12em;
             cursor: pointer;
             color: var(--text-secondary);
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .history-tab-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .history-tab-btn.active {
+            background: #ffffff;
+            color: var(--text-primary);
+            box-shadow: 0 4px 10px rgba(15,23,42,0.12);
+            transform: scale(1.05);
+        }
+
+        /* Smooth transition for tab content */
+        .history-list {
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .history-tab-btn.active {
@@ -1179,9 +1219,19 @@
                 font-size: 0.7rem;
             }
 
-            .history-header {
+            .history-header-top {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 0.8rem;
+            }
+
+            .history-action-buttons {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .history-action-buttons .add-btn {
+                width: 100%;
             }
         }
 
@@ -1962,24 +2012,26 @@
                     <!-- RIGHT: CONTACT HISTORY -->
                     <div class="detail-column-right">
                         <div class="history-header">
-                            <div>
-                                <h2 class="history-title">Historia kontaktu</h2>
+                            <div class="history-header-top">
+                                <h2 class="history-title">Historia klienta</h2>
+                                <div class="history-action-buttons">
+                                    <button id="addCompanyActivityBtn" class="add-btn history-add-btn">
+                                        <span class="plus">+</span>
+                                        <span>Dodaj aktywność</span>
+                                    </button>
+                                    <button id="addCompanyNoteBtn" class="add-btn history-add-btn">
+                                        <span class="plus">+</span>
+                                        <span>Dodaj notatkę</span>
+                                    </button>
+                                </div>
                             </div>
                             <div class="history-controls">
                                 <div class="history-tabs">
-                                    <button class="history-tab-btn active" data-entity="contact" data-scope="all">Wszystko</button>
-                                    <button class="history-tab-btn active" data-entity="contact" data-scope="notes">Notatki</button>
-                                    <button class="history-tab-btn" data-entity="contact" data-scope="activities">Aktywności</button>
-                                    <button class="history-tab-btn" data-entity="contact" data-scope="full">Full stream</button>
+                                    <button class="history-tab-btn active" data-entity="company" data-scope="all">Wszystko</button>
+                                    <button class="history-tab-btn" data-entity="company" data-scope="notes">Notatki</button>
+                                    <button class="history-tab-btn" data-entity="company" data-scope="activities">Aktywności</button>
+                                    <button class="history-tab-btn" data-entity="company" data-scope="full">Full stream</button>
                                 </div>
-                                <button id="addContactActivityBtn" class="add-btn history-add-btn">
-                                    <span class="plus">+</span>
-                                    <span>Dodaj aktywność</span>
-                                </button>
-                                <button id="addContactNoteBtn" class="add-btn history-add-btn">
-                                    <span class="plus">+</span>
-                                    <span>Dodaj notatkę</span>
-                                </button>
                             </div>
                         </div>
 
@@ -2099,24 +2151,26 @@
                     <!-- RIGHT: COMPANY HISTORY -->
                     <div class="detail-column-right">
                         <div class="history-header">
-                            <div>
-                                <h2 class="history-title">Historia klienta</h2>
+                            <div class="history-header-top">
+                                <h2 class="history-title">Historia kontaktu</h2>
+                                <div class="history-action-buttons">
+                                    <button id="addContactActivityBtn" class="add-btn history-add-btn">
+                                        <span class="plus">+</span>
+                                        <span>Dodaj aktywność</span>
+                                    </button>
+                                    <button id="addContactNoteBtn" class="add-btn history-add-btn">
+                                        <span class="plus">+</span>
+                                        <span>Dodaj notatkę</span>
+                                    </button>
+                                </div>
                             </div>
                             <div class="history-controls">
                                 <div class="history-tabs">
-                                    <button class="history-tab-btn active" data-entity="company" data-scope="all">Wszystko</button>
-                                    <button class="history-tab-btn active" data-entity="company" data-scope="notes">Notatki</button>
-                                    <button class="history-tab-btn" data-entity="company" data-scope="activities">Aktywności</button>
-                                    <button class="history-tab-btn" data-entity="company" data-scope="full">Full stream</button>
+                                    <button class="history-tab-btn active" data-entity="contact" data-scope="all">Wszystko</button>
+                                    <button class="history-tab-btn" data-entity="contact" data-scope="notes">Notatki</button>
+                                    <button class="history-tab-btn" data-entity="contact" data-scope="activities">Aktywności</button>
+                                    <button class="history-tab-btn" data-entity="contact" data-scope="full">Full stream</button>
                                 </div>
-                                <button id="addCompanyActivityBtn" class="add-btn history-add-btn">
-                                    <span class="plus">+</span>
-                                    <span>Dodaj aktywność</span>
-                                </button>
-                                <button id="addCompanyNoteBtn" class="add-btn history-add-btn">
-                                    <span class="plus">+</span>
-                                    <span>Dodaj notatkę</span>
-                                </button>
                             </div>
                         </div>
 
