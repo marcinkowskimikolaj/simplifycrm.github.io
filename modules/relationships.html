@@ -1196,480 +1196,161 @@
                 width: 100%;
             }
         }
-    
-        /* ============= TAGS SYSTEM ============= */
+
+        /* ============= ACTIVITIES STYLES ============= */
         
-        /* Tag Manager Icon */
-        .tags-manager-icon {
-            width: 32px;
-            height: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: var(--surface);
-            border: 1px solid var(--border-subtle);
-            cursor: pointer;
-            transition: all 0.18s ease;
-            margin-right: 0.8rem;
-        }
-
-        .tags-manager-icon:hover {
-            background: rgba(15,23,42,0.04);
-            border-color: var(--border-strong);
-            box-shadow: 0 4px 10px rgba(15,23,42,0.16);
-            transform: translateY(-1px);
-        }
-
-        .tags-manager-icon svg {
-            width: 16px;
-            height: 16px;
-            opacity: 0.7;
-        }
-
-        /* Tags Modal */
-        .tags-modal .modal-content {
-            max-width: 680px;
-        }
-
-        .tags-modal-tabs {
-            display: inline-flex;
-            border-radius: 999px;
-            background: rgba(15,23,42,0.04);
-            padding: 0.25rem;
-            margin-bottom: 1.8rem;
-        }
-
-        .tags-modal-tab {
-            border: none;
-            background: transparent;
-            border-radius: 999px;
-            padding: 0.45rem 1.2rem;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: all 0.18s ease;
-        }
-
-        .tags-modal-tab.active {
-            background: #ffffff;
-            color: var(--text-primary);
-            box-shadow: 0 4px 10px rgba(15,23,42,0.12);
-        }
-
-        /* Tag Form */
-        .tag-form-section {
-            background: var(--surface-soft);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .color-picker-grid {
+        /* ACTIVITY TYPE SELECTOR */
+        .activity-type-selector {
             display: grid;
-            grid-template-columns: repeat(9, 1fr);
-            gap: 0.5rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.6rem;
             margin-top: 0.5rem;
         }
 
-        .color-option {
-            width: 100%;
-            aspect-ratio: 1;
-            border: 2px solid transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.18s ease;
-            position: relative;
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .color-option.selected {
-            border-color: var(--text-primary);
-            transform: scale(1.15);
-        }
-
-        .color-option.selected::after {
-            content: '✓';
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-
-        /* Tags List */
-        .tags-list-section {
-            margin-top: 1.5rem;
-        }
-
-        .tags-list-section h3 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .tags-list {
+        .activity-type-btn {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .tag-list-item {
-            display: flex;
             align-items: center;
-            justify-content: space-between;
-            background: var(--surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            padding: 0.8rem 1rem;
-            transition: all 0.18s ease;
-        }
-
-        .tag-list-item:hover {
-            border-color: var(--border-strong);
-            box-shadow: 0 2px 8px rgba(15,23,42,0.08);
-        }
-
-        .tag-list-item-left {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            flex: 1;
-            min-width: 0;
-        }
-
-        .tag-list-item-color {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            flex-shrink: 0;
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .tag-list-item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .tag-list-item-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.15rem;
-        }
-
-        .tag-list-item-desc {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .tag-list-item-actions {
-            display: flex;
             gap: 0.4rem;
-            flex-shrink: 0;
-        }
-
-        .tag-action-btn {
-            width: 28px;
-            height: 28px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--border-subtle);
+            padding: 0.8rem;
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
             background: transparent;
-            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.18s ease;
-        }
-
-        .tag-action-btn:hover {
-            background: rgba(15,23,42,0.04);
-            border-color: var(--border-strong);
-        }
-
-        .tag-action-btn svg {
-            width: 14px;
-            height: 14px;
-        }
-
-        /* Tag Badge - Minimal horizontal bars for cards */
-        .tag-badge {
-            position: relative;
-            width: 24px;
-            height: 4px;
-            border-radius: 2px;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            flex-shrink: 0;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .tag-badge:hover {
-            height: 5px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            transform: translateY(-1px);
-        }
-
-        /* Tooltip for tag name on hover */
-        .tag-badge::before {
-            content: attr(data-tag-name);
-            position: absolute;
-            bottom: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%) scale(0.95);
-            background: rgba(17, 24, 39, 0.97);
-            color: white;
-            padding: 0.45rem 0.75rem;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .tag-badge:hover::before {
-            opacity: 1;
-            transform: translateX(-50%) scale(1);
-        }
-
-        /* Small arrow for tooltip */
-        .tag-badge::after {
-            content: '';
-            position: absolute;
-            bottom: calc(100% + 2px);
-            left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: rgba(17, 24, 39, 0.97);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tag-badge:hover::after {
-            opacity: 1;
-        }
-
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            align-items: center;
-        }
-
-        /* Tags bar in cards - horizontal layout */
-        .card .tags-container {
-            margin-top: 0.9rem;
-            padding-top: 0.9rem;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        /* Tags in detail view - inline with other info */
-        .detail-tags-inline {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .detail-tag-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.3rem 0.65rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.01em;
-            color: white;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-        }
-
-        .detail-tag-item:hover {
-            filter: brightness(1.08);
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-        }
-
-        .detail-tag-item .remove-tag-btn {
-            background: rgba(255, 255, 255, 0.25);
-            border: none;
-            color: white;
-            cursor: pointer;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            line-height: 1;
-            transition: all 0.15s ease;
-            font-weight: 700;
-            padding: 0;
-        }
-
-        .detail-tag-item .remove-tag-btn:hover {
-            background: rgba(255, 255, 255, 0.4);
-            transform: scale(1.15);
-        }
-
-        /* Add tag button - small plus icon */
-        .add-tag-btn {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            border: 1px solid var(--border-subtle);
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
             transition: all 0.2s ease;
-            flex-shrink: 0;
         }
 
-        .add-tag-btn:hover {
-            background: rgba(17, 24, 39, 0.04);
+        .activity-type-btn:hover {
+            border-color: var(--border-strong);
+            background: rgba(15,23,42,0.02);
+        }
+
+        .activity-type-btn.active {
             border-color: var(--text-primary);
-            color: var(--text-primary);
-            transform: scale(1.1);
+            background: rgba(15,23,42,0.04);
         }
 
-        /* Inline tag dropdown */
-        .tag-dropdown {
-            position: absolute;
-            top: calc(100% + 4px);
-            left: 0;
-            background: var(--surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            padding: 0.4rem;
-            min-width: 180px;
-            max-height: 240px;
-            overflow-y: auto;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(-8px);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        .activity-type-btn .type-icon {
+            font-size: 1.5rem;
         }
 
-        .tag-dropdown.visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-        }
-
-        .tag-dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.7rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.15s ease;
-            font-size: 0.8rem;
-        }
-
-        .tag-dropdown-item:hover {
-            background: rgba(17, 24, 39, 0.04);
-        }
-
-        .tag-dropdown-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-
-        .tag-dropdown-empty {
-            padding: 1rem;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            font-style: italic;
-        }
-
-        /* Empty state for tags */
-        .empty-state-small {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            font-style: italic;
-            padding: 0.5rem 0;
-        }
-
-        /* Tag assignment section */
-        .tag-assignment {
-            display: flex;
-            gap: 0.5rem;
-            align-items: stretch;
-        }
-
-        .tag-assignment select {
-            flex: 1;
-        }
-
-        /* Detail section styles */
-        .detail-section {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .detail-section-header {
-            margin-bottom: 1rem;
-        }
-
-        .detail-section-header h3 {
+        .activity-type-btn .type-label {
             font-family: 'Outfit', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: var(--text-secondary);
-            margin: 0;
         }
 
+        /* ACTIVITY ITEM */
+        .activity-item {
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            border-left-width: 3px;
+            padding: 1rem;
+            transition: all 0.2s ease;
+        }
 
-        /* Tags in Card */
-        .card .tags-container {
+        .activity-item:hover {
+            box-shadow: 0 4px 12px rgba(15,23,42,0.08);
+            transform: translateY(-1px);
+        }
+
+        .activity-item-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .activity-item-icon {
+            font-size: 1.2rem;
+        }
+
+        .activity-item-type {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-secondary);
+        }
+
+        .activity-item-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .activity-item-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        .activity-item-notes {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+
+        .activity-item-actions {
+            display: flex;
+            gap: 0.4rem;
             margin-top: 0.8rem;
             padding-top: 0.8rem;
             border-top: 1px solid var(--border-subtle);
         }
 
-</style>
+        .activity-item-actions button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .activity-item-actions button:hover {
+            background: rgba(15,23,42,0.04);
+            border-color: var(--border-strong);
+        }
+
+        .activity-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-left: auto;
+        }
+
+        .activity-status.planned {
+            background: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+        }
+
+        .activity-status.completed {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .activity-status.cancelled {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+    </style>
 </head>
 <body>
     <!-- HEADER -->
@@ -1727,14 +1408,7 @@
                         </p>
                     </div>
                     <div class="toolbar">
-                                                <!-- Tags Manager Icon -->
-                        <button class="tags-manager-icon" onclick="openTagsManager('contacts')" title="Zarządzaj etykietami">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                            </svg>
-                        </button>
-<div class="view-switcher">
+                        <div class="view-switcher">
                             <button class="view-btn active" data-view="grid" title="Widok kafelków" onclick="switchContactsView('grid')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="7" height="7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1817,8 +1491,13 @@
                             <div class="history-controls">
                                 <div class="history-tabs">
                                     <button class="history-tab-btn active" data-entity="contact" data-scope="notes">Notatki</button>
+                                    <button class="history-tab-btn" data-entity="contact" data-scope="activities">Aktywności</button>
                                     <button class="history-tab-btn" data-entity="contact" data-scope="full">Full stream</button>
                                 </div>
+                                <button id="addContactActivityBtn" class="add-btn history-add-btn">
+                                    <span class="plus">+</span>
+                                    <span>Dodaj aktywność</span>
+                                </button>
                                 <button id="addContactNoteBtn" class="add-btn history-add-btn">
                                     <span class="plus">+</span>
                                     <span>Dodaj notatkę</span>
@@ -1849,14 +1528,7 @@
                         </p>
                     </div>
                     <div class="toolbar">
-                                                <!-- Tags Manager Icon -->
-                        <button class="tags-manager-icon" onclick="openTagsManager('companies')" title="Zarządzaj etykietami">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                                <line x1="7" y1="7" x2="7.01" y2="7"></line>
-                            </svg>
-                        </button>
-<div class="view-switcher">
+                        <div class="view-switcher">
                             <button class="view-btn active" data-view="grid" title="Widok kafelków" onclick="switchCompaniesView('grid')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="3" width="7" height="7" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1949,8 +1621,13 @@
                             <div class="history-controls">
                                 <div class="history-tabs">
                                     <button class="history-tab-btn active" data-entity="company" data-scope="notes">Notatki</button>
+                                    <button class="history-tab-btn" data-entity="company" data-scope="activities">Aktywności</button>
                                     <button class="history-tab-btn" data-entity="company" data-scope="full">Full stream</button>
                                 </div>
+                                <button id="addCompanyActivityBtn" class="add-btn history-add-btn">
+                                    <span class="plus">+</span>
+                                    <span>Dodaj aktywność</span>
+                                </button>
                                 <button id="addCompanyNoteBtn" class="add-btn history-add-btn">
                                     <span class="plus">+</span>
                                     <span>Dodaj notatkę</span>
@@ -2097,6 +1774,75 @@
         </div>
     </div>
 
+    <!-- MODAL: ADD ACTIVITY -->
+    <div id="activityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="activityModalTitle">Dodaj aktywność</h2>
+                <button class="close-btn" id="closeActivityModalBtn">&times;</button>
+            </div>
+            <form id="activityForm">
+                <input type="hidden" id="activityEntityType">
+                <input type="hidden" id="activityEntityId">
+                <input type="hidden" id="activityType" value="EMAIL">
+                
+                <!-- Type selector -->
+                <div class="form-group">
+                    <label>Typ aktywności *</label>
+                    <div class="activity-type-selector" id="activityTypeSelector">
+                        <button type="button" class="activity-type-btn active" data-type="EMAIL">
+                            <span class="type-icon">📧</span>
+                            <span class="type-label">Email</span>
+                        </button>
+                        <button type="button" class="activity-type-btn" data-type="PHONE">
+                            <span class="type-icon">📞</span>
+                            <span class="type-label">Telefon</span>
+                        </button>
+                        <button type="button" class="activity-type-btn" data-type="MEETING">
+                            <span class="type-icon">🤝</span>
+                            <span class="type-label">Spotkanie</span>
+                        </button>
+                        <button type="button" class="activity-type-btn" data-type="TASK">
+                            <span class="type-icon">✅</span>
+                            <span class="type-label">Zadanie</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Title -->
+                <div class="form-group">
+                    <label for="activityTitle">Tytuł *</label>
+                    <input type="text" id="activityTitle" required placeholder="np. Rozmowa ws. oferty">
+                </div>
+                
+                <!-- Date -->
+                <div class="form-group">
+                    <label for="activityDate">Data i czas *</label>
+                    <input type="datetime-local" id="activityDate" required>
+                </div>
+                
+                <!-- Notes -->
+                <div class="form-group">
+                    <label for="activityNotes">Notatki <span class="optional">(opcjonalnie)</span></label>
+                    <textarea id="activityNotes" placeholder="Szczegółowe informacje..."></textarea>
+                </div>
+                
+                <!-- Contact selector (when from company) -->
+                <div class="form-group" id="activityContactSelectorGroup" style="display: none;">
+                    <label for="activityContactSelect">Przypisz do osoby <span class="optional">(opcjonalnie)</span></label>
+                    <select id="activityContactSelect">
+                        <option value="">Tylko firma</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelActivityBtn">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zapisz aktywność</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Google APIs -->
     <script src="https://apis.google.com/js/api.js" async defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -2106,6 +1852,7 @@
         import { CONFIG } from '../shared/config.js';
         import { AuthService } from '../shared/auth.js';
         import { DataService } from '../shared/data-service.js';
+        import { ActivitiesService } from '../shared/activities-service.js';
 
         // ============= AUTH GUARD =============
         if (!AuthService.requireAuth()) {
@@ -2113,14 +1860,6 @@
         }
 
         // ============= VARIABLES =============
-                // Tags variables
-        let companyTags = [];
-        let contactTags = [];
-        let companyTagRelations = [];
-        let contactTagRelations = [];
-        let currentTagFilter = null;
-        let currentTagType = 'companies';
-
         let companies = [];
         let contacts = [];
         let companyHistory = [];
@@ -2146,18 +1885,17 @@
         let contactsViewMode = 'grid';
         let companiesViewMode = 'grid';
 
+        let companyActivities = [];
+        let contactActivities = [];
+        let currentActivityType = 'EMAIL';
+
         // ============= INIT =============
         async function init() {
             try {
                 // Set user email in header
                 const email = AuthService.getUserEmail();
                 if (email) {
-                    // Load user preferences
-                    await loadUserPreferences(email);
-                    
-                    // Display name or email
-                    const displayText = AuthService.getUserDisplayText();
-                    document.getElementById('userEmail').textContent = displayText;
+                    document.getElementById('userEmail').textContent = email;
                 }
 
                 // Initialize GAPI
@@ -2202,36 +1940,8 @@
 
         // ============= DATA LOADING =============
         async function loadData() {
-            // Show loading indicators
-            const companiesLoading = document.getElementById('companiesLoading');
-            const contactsLoading = document.getElementById('contactsLoading');
-            companiesLoading.style.display = 'block';
-            contactsLoading.style.display = 'block';
-
-            try {
-                // STEP 1: Load all data FIRST (no rendering yet!)
-                [companies, contacts] = await Promise.all([
-                    DataService.loadCompanies(),
-                    DataService.loadContacts()
-                ]);
-
-                // STEP 2: Load tags and history
-                await loadTagsData();
-                await Promise.all([loadCompanyHistory(), loadContactHistory()]);
-
-                // STEP 3: NOW render everything (all data is available)
-                renderCompanies();
-                renderAllContacts();
-
-                console.log('✓ Wszystkie dane załadowane i wyświetlone');
-            } catch (err) {
-                console.error('Błąd ładowania danych:', err);
-                showStatus('Błąd ładowania danych', 'error');
-            } finally {
-                // Hide loading indicators
-                companiesLoading.style.display = 'none';
-                contactsLoading.style.display = 'none';
-            }
+            await Promise.all([loadCompanies(), loadContacts()]);
+            await Promise.all([loadCompanyHistory(), loadContactHistory(), loadActivitiesData()]);
         }
 
         async function loadCompanies() {
@@ -2296,55 +2006,25 @@
 
         // ============= FILTER HELPERS =============
         function getFilteredCompanies() {
-            let result = companies;
-            
-            // Search filter
-            if (currentSearchTerm) {
-                const q = currentSearchTerm.toLowerCase();
-                result = result.filter(c => {
-                    const combined = `${c.name} ${c.industry} ${c.notes} ${c.website} ${c.phone} ${c.city} ${c.country}`.toLowerCase();
-                    return combined.includes(q);
-                });
-            }
-            
-            // Tag filter
-            if (currentTagFilter && currentTagFilter.type === 'company') {
-                result = DataService.getCompaniesByTag(
-                    currentTagFilter.id,
-                    result,
-                    companyTagRelations
-                );
-            }
-            
-            return result;
+            if (!currentSearchTerm) return companies;
+            const q = currentSearchTerm.toLowerCase();
+            return companies.filter(c => {
+                const combined = `${c.name} ${c.industry} ${c.notes} ${c.website} ${c.phone} ${c.city} ${c.country}`.toLowerCase();
+                return combined.includes(q);
+            });
         }
 
         function getFilteredContacts() {
-            let result = contacts;
-            
-            // Search filter
-            if (currentSearchTerm) {
-                const q = currentSearchTerm.toLowerCase();
-                result = result.filter(contact => {
-                    const company = companies.find(c => c.id === contact.companyId);
-                    const companyText = company
-                        ? `${company.name} ${company.industry} ${company.city} ${company.country}`
-                        : '';
-                    const combined = `${contact.name} ${contact.position} ${contact.email} ${contact.phone} ${companyText}`.toLowerCase();
-                    return combined.includes(q);
-                });
-            }
-            
-            // Tag filter
-            if (currentTagFilter && currentTagFilter.type === 'contact') {
-                result = DataService.getContactsByTag(
-                    currentTagFilter.id,
-                    result,
-                    contactTagRelations
-                );
-            }
-            
-            return result;
+            if (!currentSearchTerm) return contacts;
+            const q = currentSearchTerm.toLowerCase();
+            return contacts.filter(contact => {
+                const company = companies.find(c => c.id === contact.companyId);
+                const companyText = company
+                    ? `${company.name} ${company.industry} ${company.city} ${company.country}`
+                    : '';
+                const combined = `${contact.name} ${contact.position} ${contact.email} ${contact.phone} ${companyText}`.toLowerCase();
+                return combined.includes(q);
+            });
         }
 
         // ============= RENDER COMPANIES =============
@@ -2438,8 +2118,6 @@
                                 </div>
                             </div>
                             ${infoRows ? `<div class="card-body">${infoRows}</div>` : ''}
-                            
-                            ${renderEntityTags(company.id, 'company')}
                             <div class="card-badge"><span>👥</span><span>${companyContacts.length} kontaktów</span></div>
                         </div>
                     `;
@@ -2528,9 +2206,7 @@
                                 ${company ? `<div class="card-info-row"><span class="emoji">🏢</span><span>${escapeHtml(company.name)}</span></div>` : `<div class="card-badge no-company"><span>⚠️</span><span>Brak firmy</span></div>`}
                                 ${contact.email ? `<div class="card-info-row"><span class="emoji">📧</span><span>${escapeHtml(contact.email)}</span></div>` : ''}
                                 ${contact.phone ? `<div class="card-info-row"><span class="emoji">📱</span><span>${escapeHtml(contact.phone)}</span></div>` : ''}
-                            
-                            ${renderEntityTags(contact.id, 'contact')}
-                        </div>
+                            </div>
                         </div>
                     `;
                 }).join('');
@@ -2569,22 +2245,8 @@
                     <div class="detail-title">${escapeHtml(company.name)}</div>
                 </div>
                 ${company.industry ? `<div class="detail-meta">${escapeHtml(company.industry)}</div>` : ''}
-                
-                <div class="detail-info">
-                    ${infoHtml || '<div class="detail-info-row"><div class="detail-info-label">Informacje</div><div class="detail-info-value">Brak dodatkowych informacji.</div></div>'}
-                    
-                    ${renderDetailTags(company.id, 'company')}
-                </div>
+                <div class="detail-info">${infoHtml || '<div class="detail-info-row"><div class="detail-info-label">Informacje</div><div class="detail-info-value">Brak dodatkowych informacji.</div></div>'}</div>
             `;
-            
-            // Setup tag dropdown toggle
-            const addBtn = document.getElementById('addCompanyTagBtn');
-            if (addBtn) {
-                addBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleTagDropdown('companyTagDropdown', 'addCompanyTagBtn');
-                });
-            }
 
             renderCompanyContacts(companyId);
             renderCompanyHistory(companyId);
@@ -2657,22 +2319,8 @@
                     <div class="detail-title">${escapeHtml(contact.name)}</div>
                 </div>
                 ${contact.position ? `<div class="detail-meta">${escapeHtml(contact.position)}</div>` : ''}
-                
-                <div class="detail-info">
-                    ${infoHtml || '<div class="detail-info-row"><div class="detail-info-label">Informacje</div><div class="detail-info-value">Brak dodatkowych informacji.</div></div>'}
-                    
-                    ${renderDetailTags(contact.id, 'contact')}
-                </div>
+                <div class="detail-info">${infoHtml || '<div class="detail-info-row"><div class="detail-info-label">Informacje</div><div class="detail-info-value">Brak dodatkowych informacji.</div></div>'}</div>
             `;
-            
-            // Setup tag dropdown toggle
-            const addBtn = document.getElementById('addContactTagBtn');
-            if (addBtn) {
-                addBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    toggleTagDropdown('contactTagDropdown', 'addContactTagBtn');
-                });
-            }
 
             const companyContainer = document.getElementById('contactCompanyCardContainer');
             const companyEmpty = document.getElementById('contactCompanyEmpty');
@@ -3007,7 +2655,7 @@
                 <div class="history-item ${entry.type === 'note' ? 'note' : 'event'}">
                     <div class="history-item-header">
                         <span class="history-item-type">${entry.type === 'note' ? 'NOTATKA' : 'ZDARZENIE'}</span>
-                        <span class="history-item-meta">${DataService.formatDateTime(entry.timestamp)}${entry.user ? ' • ' + escapeHtml(formatUserName(entry.user)) : ''}</span>
+                        <span class="history-item-meta">${DataService.formatDateTime(entry.timestamp)}${entry.user ? ' • ' + escapeHtml(entry.user) : ''}</span>
                     </div>
                     <div class="history-item-body">${escapeHtml(entry.content || '')}</div>
                 </div>
@@ -3034,7 +2682,7 @@
                 <div class="history-item ${entry.type === 'note' ? 'note' : 'event'}">
                     <div class="history-item-header">
                         <span class="history-item-type">${entry.type === 'note' ? 'NOTATKA' : 'ZDARZENIE'}</span>
-                        <span class="history-item-meta">${DataService.formatDateTime(entry.timestamp)}${entry.user ? ' • ' + escapeHtml(formatUserName(entry.user)) : ''}</span>
+                        <span class="history-item-meta">${DataService.formatDateTime(entry.timestamp)}${entry.user ? ' • ' + escapeHtml(entry.user) : ''}</span>
                     </div>
                     <div class="history-item-body">${escapeHtml(entry.content || '')}</div>
                 </div>
@@ -3141,650 +2789,7 @@
             return div.innerHTML;
         }
 
-        // ============= USER PREFERENCES =============
-        async function loadUserPreferences(email) {
-            try {
-                const prefs = await DataService.loadUserPreferences(email);
-                if (prefs && prefs.displayName) {
-                    AuthService.saveDisplayName(prefs.displayName);
-                    console.log('✓ Załadowano preferencje użytkownika:', prefs.displayName);
-                }
-            } catch (error) {
-                console.warn('Nie udało się załadować preferencji użytkownika:', error);
-                // Nie blokuj działania aplikacji
-            }
-        }
-
-        /**
-         * Konwertuje email na display name jeśli to jest aktualny użytkownik
-         */
-        function formatUserName(userName) {
-            if (!userName) return '';
-            
-            const currentEmail = AuthService.getUserEmail();
-            const displayName = AuthService.getDisplayName();
-            
-            // Jeśli userName to email aktualnego użytkownika i mamy display name
-            if (userName === currentEmail && displayName) {
-                return displayName;
-            }
-            
-            // Jeśli userName to email aktualnego użytkownika ale nie ma display name
-            if (userName === currentEmail) {
-                return currentEmail.split('@')[0];
-            }
-            
-            // Dla innych użytkowników - zwróć jak jest (może być email lub już display name)
-            return userName;
-        }
-
-        // ============= TAGS JAVASCRIPT =============
-// Ten kod należy dodać do relationships.html w sekcji 
-// ========== TAGS MANAGER MODAL ==========
-
-function openTagsManager(initialType = 'companies') {
-    currentTagType = initialType;
-    renderColorPickers();
-    renderCompanyTagsList();
-    renderContactTagsList();
-    switchTagsTab(initialType);
-    document.getElementById('tagsManagerModal').classList.add('active');
-}
-
-function closeTagsManager() {
-    document.getElementById('tagsManagerModal').classList.remove('active');
-    resetCompanyTagForm();
-    resetContactTagForm();
-}
-
-function switchTagsTab(type) {
-    currentTagType = type;
-    
-    // Update tabs
-    document.querySelectorAll('.tags-modal-tab').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.type === type);
-    });
-    
-    // Update sections
-    document.getElementById('companiesTagsSection').style.display = 
-        type === 'companies' ? 'block' : 'none';
-    document.getElementById('contactsTagsSection').style.display = 
-        type === 'contacts' ? 'block' : 'none';
-}
-
-// ========== COLOR PICKER ==========
-
-function renderColorPickers() {
-    const colors = CONFIG.TAGS.DEFAULT_COLORS;
-    
-    // Company tags color picker
-    const companyPicker = document.getElementById('companyTagColorPicker');
-    companyPicker.innerHTML = colors.map(color => `
-        <div class="color-option" 
-             style="background-color: ${color}" 
-             data-color="${color}"
-             onclick="selectColor('company', '${color}')">
-        </div>
-    `).join('');
-    
-    // Contact tags color picker
-    const contactPicker = document.getElementById('contactTagColorPicker');
-    contactPicker.innerHTML = colors.map(color => `
-        <div class="color-option" 
-             style="background-color: ${color}" 
-             data-color="${color}"
-             onclick="selectColor('contact', '${color}')">
-        </div>
-    `).join('');
-    
-    // Select default color
-    selectColor('company', '#3b82f6');
-    selectColor('contact', '#3b82f6');
-}
-
-function selectColor(type, color) {
-    const pickerId = type === 'company' ? 'companyTagColorPicker' : 'contactTagColorPicker';
-    const inputId = type === 'company' ? 'companyTagColor' : 'contactTagColor';
-    
-    // Update hidden input
-    document.getElementById(inputId).value = color;
-    
-    // Update visual selection
-    const picker = document.getElementById(pickerId);
-    picker.querySelectorAll('.color-option').forEach(opt => {
-        opt.classList.toggle('selected', opt.dataset.color === color);
-    });
-}
-
-// ========== COMPANY TAGS ==========
-
-async function saveCompanyTag(event) {
-    event.preventDefault();
-    
-    const tagId = document.getElementById('companyTagId').value;
-    const rowIndex = document.getElementById('companyTagRowIndex').value;
-    
-    const tag = {
-        id: tagId || DataService.generateId(),
-        name: document.getElementById('companyTagName').value.trim(),
-        color: document.getElementById('companyTagColor').value,
-        description: document.getElementById('companyTagDescription').value.trim()
-    };
-    
-    try {
-        await DataService.saveCompanyTag(tag, rowIndex ? parseInt(rowIndex) : null);
-        showStatus(tagId ? 'Etykieta zaktualizowana' : 'Etykieta dodana', 'success');
-        
-        // Reload
-        await loadTagsData();
-        renderCompanyTagsList();
-        renderCompanies();
-        
-        // Reset form
-        resetCompanyTagForm();
-    } catch (error) {
-        console.error('Error saving company tag:', error);
-        showStatus('Błąd przy zapisie etykiety', 'error');
-    }
-}
-
-function resetCompanyTagForm() {
-    document.getElementById('companyTagForm').reset();
-    document.getElementById('companyTagId').value = '';
-    document.getElementById('companyTagRowIndex').value = '';
-    document.getElementById('companyTagSubmitText').textContent = 'Dodaj etykietę';
-    selectColor('company', '#3b82f6');
-}
-
-function editCompanyTag(tag, rowIndex) {
-    document.getElementById('companyTagId').value = tag.id;
-    document.getElementById('companyTagRowIndex').value = rowIndex;
-    document.getElementById('companyTagName').value = tag.name;
-    document.getElementById('companyTagDescription').value = tag.description || '';
-    document.getElementById('companyTagSubmitText').textContent = 'Zapisz zmiany';
-    selectColor('company', tag.color);
-    
-    // Scroll to form
-    document.querySelector('#companiesTagsSection .tag-form-section').scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-    });
-}
-
-async function deleteCompanyTag(tagId, rowIndex) {
-    if (!confirm('Czy na pewno chcesz usunąć tę etykietę? Zostanie ona usunięta ze wszystkich firm.')) {
-        return;
-    }
-    
-    try {
-        await DataService.deleteCompanyTag(rowIndex);
-        showStatus('Etykieta usunięta', 'success');
-        
-        // Reload
-        await loadTagsData();
-        renderCompanyTagsList();
-        renderCompanies();
-    } catch (error) {
-        console.error('Error deleting company tag:', error);
-        showStatus('Błąd przy usuwaniu etykiety', 'error');
-    }
-}
-
-function renderCompanyTagsList() {
-    const container = document.getElementById('companyTagsList');
-    
-    if (!companyTags || companyTags.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state small">
-                <p>Brak etykiet dla firm. Dodaj pierwszą etykietę używając formularza powyżej.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = companyTags.map((tag, index) => `
-        <div class="tag-list-item">
-            <div class="tag-list-item-left">
-                <div class="tag-list-item-color" style="background-color: ${tag.color}"></div>
-                <div class="tag-list-item-info">
-                    <div class="tag-list-item-name">${escapeHtml(tag.name)}</div>
-                    ${tag.description ? `<div class="tag-list-item-desc">${escapeHtml(tag.description)}</div>` : ''}
-                </div>
-            </div>
-            <div class="tag-list-item-actions">
-                <button class="tag-action-btn" onclick='editCompanyTag(${JSON.stringify(tag)}, ${index})' title="Edytuj">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                </button>
-                <button class="tag-action-btn" onclick="deleteCompanyTag('${tag.id}', ${index})" title="Usuń">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// ========== CONTACT TAGS ==========
-
-async function saveContactTag(event) {
-    event.preventDefault();
-    
-    const tagId = document.getElementById('contactTagId').value;
-    const rowIndex = document.getElementById('contactTagRowIndex').value;
-    
-    const tag = {
-        id: tagId || DataService.generateId(),
-        name: document.getElementById('contactTagName').value.trim(),
-        color: document.getElementById('contactTagColor').value,
-        description: document.getElementById('contactTagDescription').value.trim()
-    };
-    
-    try {
-        await DataService.saveContactTag(tag, rowIndex ? parseInt(rowIndex) : null);
-        showStatus(tagId ? 'Etykieta zaktualizowana' : 'Etykieta dodana', 'success');
-        
-        // Reload
-        await loadTagsData();
-        renderContactTagsList();
-        renderAllContacts();
-        
-        // Reset form
-        resetContactTagForm();
-    } catch (error) {
-        console.error('Error saving contact tag:', error);
-        showStatus('Błąd przy zapisie etykiety', 'error');
-    }
-}
-
-function resetContactTagForm() {
-    document.getElementById('contactTagForm').reset();
-    document.getElementById('contactTagId').value = '';
-    document.getElementById('contactTagRowIndex').value = '';
-    document.getElementById('contactTagSubmitText').textContent = 'Dodaj etykietę';
-    selectColor('contact', '#3b82f6');
-}
-
-function editContactTag(tag, rowIndex) {
-    document.getElementById('contactTagId').value = tag.id;
-    document.getElementById('contactTagRowIndex').value = rowIndex;
-    document.getElementById('contactTagName').value = tag.name;
-    document.getElementById('contactTagDescription').value = tag.description || '';
-    document.getElementById('contactTagSubmitText').textContent = 'Zapisz zmiany';
-    selectColor('contact', tag.color);
-    
-    // Scroll to form
-    document.querySelector('#contactsTagsSection .tag-form-section').scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-    });
-}
-
-async function deleteContactTag(tagId, rowIndex) {
-    if (!confirm('Czy na pewno chcesz usunąć tę etykietę? Zostanie ona usunięta ze wszystkich kontaktów.')) {
-        return;
-    }
-    
-    try {
-        await DataService.deleteContactTag(rowIndex);
-        showStatus('Etykieta usunięta', 'success');
-        
-        // Reload
-        await loadTagsData();
-        renderContactTagsList();
-        renderAllContacts();
-    } catch (error) {
-        console.error('Error deleting contact tag:', error);
-        showStatus('Błąd przy usuwaniu etykiety', 'error');
-    }
-}
-
-function renderContactTagsList() {
-    const container = document.getElementById('contactTagsList');
-    
-    if (!contactTags || contactTags.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state small">
-                <p>Brak etykiet dla osób. Dodaj pierwszą etykietę używając formularza powyżej.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = contactTags.map((tag, index) => `
-        <div class="tag-list-item">
-            <div class="tag-list-item-left">
-                <div class="tag-list-item-color" style="background-color: ${tag.color}"></div>
-                <div class="tag-list-item-info">
-                    <div class="tag-list-item-name">${escapeHtml(tag.name)}</div>
-                    ${tag.description ? `<div class="tag-list-item-desc">${escapeHtml(tag.description)}</div>` : ''}
-                </div>
-            </div>
-            <div class="tag-list-item-actions">
-                <button class="tag-action-btn" onclick='editContactTag(${JSON.stringify(tag)}, ${index})' title="Edytuj">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                </button>
-                <button class="tag-action-btn" onclick="deleteContactTag('${tag.id}', ${index})" title="Usuń">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="3 6 5 6 21 6"></polyline>
-                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>
-                </button>
-            </div>
-        </div>
-    `).join('');
-}
-
-// ========== TAG FILTERING ==========
-
-function filterByTag(tagId, tagName, tagColor, type) {
-    currentTagFilter = { id: tagId, name: tagName, color: tagColor, type: type };
-    
-    if (type === 'company') {
-        renderCompanies();
-    } else {
-        renderAllContacts();
-    }
-}
-
-function clearTagFilter() {
-    currentTagFilter = null;
-    renderCompanies();
-    renderAllContacts();
-}
-
-// ========== RENDER TAGS IN VIEWS ==========
-
-function renderEntityTags(entityId, type) {
-    const tags = type === 'company' 
-        ? DataService.getCompanyTags(entityId, companyTags, companyTagRelations)
-        : DataService.getContactTags(entityId, contactTags, contactTagRelations);
-    
-    if (!tags || tags.length === 0) return '';
-    
-    // Render minimal color bars for cards
-    return `
-        <div class="tags-container">
-            ${tags.map(tag => `
-                <div class="tag-badge" 
-                     style="background-color: ${tag.color}"
-                     data-tag-name="${escapeHtml(tag.name)}"
-                     title="${escapeHtml(tag.description || tag.name)}">
-                </div>
-            `).join('')}
-        </div>
-    `;
-}
-
-// ========== ASSIGN/REMOVE TAGS ==========
-
-async function assignTagToEntity(entityId, tagId, type) {
-    try {
-        if (type === 'company') {
-            await DataService.assignTagToCompany(entityId, tagId);
-        } else {
-            await DataService.assignTagToContact(entityId, tagId);
-        }
-        
-        showStatus('Etykieta przypisana', 'success');
-        
-        // Reload
-        await loadTagsData();
-        
-        // Refresh current view
-        if (type === 'company' && currentCompanyId === entityId) {
-            viewCompanyDetail(entityId);
-        } else if (type === 'contact' && currentContactId === entityId) {
-            viewContactDetail(entityId);
-        }
-    } catch (error) {
-        console.error('Błąd przypisywania etykiety:', error);
-        showStatus('Błąd przypisywania etykiety', 'error');
-    }
-}
-
-/**
- * Render tags in detail view (inline with other info)
- */
-function renderDetailTags(entityId, type) {
-    const allTags = type === 'company' ? companyTags : contactTags;
-    const allRelations = type === 'company' ? companyTagRelations : contactTagRelations;
-    
-    const entityTags = type === 'company' 
-        ? DataService.getCompanyTags(entityId, allTags, allRelations)
-        : DataService.getContactTags(entityId, allTags, allRelations);
-    
-    const availableTags = allTags.filter(tag => 
-        !entityTags.find(et => et.id === tag.id)
-    );
-    
-    const dropdownId = type === 'company' ? 'companyTagDropdown' : 'contactTagDropdown';
-    const addBtnId = type === 'company' ? 'addCompanyTagBtn' : 'addContactTagBtn';
-    
-    return `
-        <div class="detail-info-row">
-            <div class="detail-info-label">Etykiety</div>
-            <div class="detail-info-value" style="position: relative;">
-                <div class="detail-tags-inline">
-                    ${entityTags.length > 0 ? entityTags.map(tag => `
-                        <div class="detail-tag-item" style="background-color: ${tag.color}">
-                            ${escapeHtml(tag.name)}
-                            <button 
-                                class="remove-tag-btn" 
-                                onclick="event.stopPropagation(); removeTagFromDetail('${entityId}', '${tag.id}', '${type}')"
-                                title="Usuń">×</button>
-                        </div>
-                    `).join('') : '<span style="color: var(--text-secondary); font-style: italic; font-size: 0.85rem;">Brak etykiet</span>'}
-                    
-                    <button class="add-tag-btn" id="${addBtnId}" title="Dodaj etykietę">+</button>
-                </div>
-                
-                <!-- Dropdown for adding tags -->
-                <div class="tag-dropdown" id="${dropdownId}">
-                    ${availableTags.length > 0 ? availableTags.map(tag => `
-                        <div class="tag-dropdown-item" onclick="quickAssignTag('${entityId}', '${tag.id}', '${type}')">
-                            <div class="tag-dropdown-color" style="background-color: ${tag.color}"></div>
-                            <span>${escapeHtml(tag.name)}</span>
-                        </div>
-                    `).join('') : '<div class="tag-dropdown-empty">Wszystkie etykiety przypisane</div>'}
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Quick assign tag from dropdown
- */
-async function quickAssignTag(entityId, tagId, type) {
-    try {
-        // Find tag name for logging
-        const allTags = type === 'company' ? companyTags : contactTags;
-        const tag = allTags.find(t => t.id === tagId);
-        const tagName = tag ? tag.name : 'etykieta';
-        
-        await assignTagToEntity(entityId, tagId, type);
-        
-        // Log to history
-        if (type === 'company') {
-            await DataService.logCompanyHistory(entityId, 'event', `Dodano etykietę: ${tagName}`);
-        } else {
-            await DataService.logContactHistory(entityId, 'event', `Dodano etykietę: ${tagName}`);
-        }
-        
-        // Reload tags and history
-        await loadTagsData();
-        if (type === 'company') {
-            await loadCompanyHistory();
-            viewCompanyDetail(entityId);
-            renderCompanyHistory(entityId);
-        } else {
-            await loadContactHistory();
-            viewContactDetail(entityId);
-            renderContactHistory(entityId);
-        }
-        
-        showStatus('Etykieta przypisana', 'success');
-    } catch (error) {
-        console.error('Błąd przypisywania etykiety:', error);
-        showStatus('Błąd przypisywania etykiety', 'error');
-    }
-}
-
-/**
- * Toggle tag dropdown visibility
- */
-function toggleTagDropdown(dropdownId, buttonId) {
-    const dropdown = document.getElementById(dropdownId);
-    const button = document.getElementById(buttonId);
-    
-    if (!dropdown || !button) return;
-    
-    const isVisible = dropdown.classList.contains('visible');
-    
-    // Close all other dropdowns
-    document.querySelectorAll('.tag-dropdown').forEach(dd => {
-        dd.classList.remove('visible');
-    });
-    
-    // Toggle this dropdown
-    if (!isVisible) {
-        dropdown.classList.add('visible');
-        
-        // Close on click outside
-        setTimeout(() => {
-            const closeOnClickOutside = (e) => {
-                if (!dropdown.contains(e.target) && !button.contains(e.target)) {
-                    dropdown.classList.remove('visible');
-                    document.removeEventListener('click', closeOnClickOutside);
-                }
-            };
-            document.addEventListener('click', closeOnClickOutside);
-        }, 10);
-    }
-}
-
-/**
- * Remove tag from entity in detail view
- */
-async function removeTagFromDetail(entityId, tagId, type) {
-    if (!confirm('Czy na pewno chcesz usunąć tę etykietę?')) {
-        return;
-    }
-    
-    try {
-        // Find tag name for logging
-        const allTags = type === 'company' ? companyTags : contactTags;
-        const tag = allTags.find(t => t.id === tagId);
-        const tagName = tag ? tag.name : 'etykieta';
-        
-        // Remove tag
-        await removeTagFromEntity(entityId, tagId, type);
-        
-        // Log to history
-        if (type === 'company') {
-            await DataService.logCompanyHistory(entityId, 'event', `Usunięto etykietę: ${tagName}`);
-        } else {
-            await DataService.logContactHistory(entityId, 'event', `Usunięto etykietę: ${tagName}`);
-        }
-        
-        // Reload tags
-        await loadTagsData();
-        
-        // Reload history
-        if (type === 'company') {
-            await loadCompanyHistory();
-            viewCompanyDetail(entityId);
-            renderCompanyHistory(entityId);
-        } else {
-            await loadContactHistory();
-            viewContactDetail(entityId);
-            renderContactHistory(entityId);
-        }
-        
-        showStatus('Etykieta usunięta', 'success');
-    } catch (error) {
-        console.error('Błąd usuwania etykiety:', error);
-        showStatus('Błąd usuwania etykiety', 'error');
-    }
-}
-
-async function removeTagFromEntity(entityId, tagId, type) {
-    try {
-        // Reload relations from sheet to get accurate row indices
-        let allRelationsFromSheet;
-        if (type === 'company') {
-            allRelationsFromSheet = await DataService.loadCompanyTagRelations(null, false);
-        } else {
-            allRelationsFromSheet = await DataService.loadContactTagRelations(null, false);
-        }
-        
-        // Find relation in fresh data
-        const relation = allRelationsFromSheet.find(r => 
-            (type === 'company' ? r.companyId : r.contactId) === entityId && r.tagId === tagId
-        );
-        
-        if (!relation) {
-            showStatus('Nie znaleziono relacji', 'error');
-            return;
-        }
-        
-        // Row index is position in array (0-based)
-        // DataService will add +2 for header row
-        const rowIndex = allRelationsFromSheet.indexOf(relation);
-        
-        if (type === 'company') {
-            await DataService.removeTagFromCompany(relation.id, rowIndex);
-        } else {
-            await DataService.removeTagFromContact(relation.id, rowIndex);
-        }
-        
-        // Reload local cache
-        await loadTagsData();
-        
-        console.log('✓ Tag removed successfully');
-    } catch (error) {
-        console.error('Error removing tag:', error);
-        throw error; // Re-throw to be caught by caller
-    }
-}
-
-// ========== LOAD TAGS DATA ==========
-
-async function loadTagsData() {
-    try {
-        [companyTags, contactTags, companyTagRelations, contactTagRelations] = await Promise.all([
-            DataService.loadCompanyTags(),
-            DataService.loadContactTags(),
-            DataService.loadCompanyTagRelations(),
-            DataService.loadContactTagRelations()
-        ]);
-        console.log('✓ Etykiety załadowane:', {
-            companyTags: companyTags.length,
-            contactTags: contactTags.length,
-            companyRelations: companyTagRelations.length,
-            contactRelations: contactTagRelations.length
-        });
-    } catch (error) {
-        console.error('Error loading tags:', error);
-    }
-}
-
-
-        
-
-        
-        // ============= MAKE FUNCTIONS GLOBAL =============
-        // Make all functions available for onclick handlers
-        
-        // Basic functions
+        // Make functions global for onclick handlers
         window.viewCompanyDetail = viewCompanyDetail;
         window.viewContactDetail = viewContactDetail;
         window.editCompany = editCompany;
@@ -3794,28 +2799,6 @@ async function loadTagsData() {
         window.editCompanyFromDetail = editCompanyFromDetail;
         window.editContactFromDetail = editContactFromDetail;
         window.closeDuplicateModal = () => document.getElementById('duplicateModal').classList.remove('active');
-        
-        // ============= EXPOSE FUNCTIONS TO WINDOW =============
-        // To jest konieczne, aby przyciski w HTML (onclick=...) widziały te funkcje
-        
-        // Tags functions
-        window.openTagsManager = openTagsManager;
-        window.closeTagsManager = closeTagsManager;
-        window.switchTagsTab = switchTagsTab;
-        window.selectColor = selectColor;
-        window.saveCompanyTag = saveCompanyTag;
-        window.editCompanyTag = editCompanyTag;
-        window.deleteCompanyTag = deleteCompanyTag;
-        window.saveContactTag = saveContactTag;
-        window.editContactTag = editContactTag;
-        window.deleteContactTag = deleteContactTag;
-        window.filterByTag = filterByTag;
-        window.renderDetailTags = renderDetailTags;
-        window.quickAssignTag = quickAssignTag;
-        window.toggleTagDropdown = toggleTagDropdown;
-        window.removeTagFromDetail = removeTagFromDetail;
-        window.clearTagFilter = clearTagFilter;
-
 
         // ============= EVENT LISTENERS =============
         document.addEventListener('DOMContentLoaded', () => {
@@ -3940,10 +2923,22 @@ async function loadTagsData() {
                     btn.classList.add('active');
                     if (entity === 'company') {
                         currentCompanyHistoryScope = scope;
-                        if (currentCompanyId) renderCompanyHistory(currentCompanyId);
+                        if (currentCompanyId) {
+                            if (scope === 'activities') {
+                                renderCompanyActivities(currentCompanyId);
+                            } else {
+                                renderCompanyHistory(currentCompanyId);
+                            }
+                        }
                     } else if (entity === 'contact') {
                         currentContactHistoryScope = scope;
-                        if (currentContactId) renderContactHistory(currentContactId);
+                        if (currentContactId) {
+                            if (scope === 'activities') {
+                                renderContactActivities(currentContactId);
+                            } else {
+                                renderContactHistory(currentContactId);
+                            }
+                        }
                     }
                 });
             });
@@ -3953,6 +2948,28 @@ async function loadTagsData() {
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) modal.classList.remove('active');
                 });
+            });
+
+            // Activity modal
+            document.getElementById('closeActivityModalBtn').addEventListener('click', closeActivityModal);
+            document.getElementById('cancelActivityBtn').addEventListener('click', closeActivityModal);
+            document.getElementById('activityForm').addEventListener('submit', saveActivity);
+            document.getElementById('addCompanyActivityBtn').addEventListener('click', () => openActivityModal('company', currentCompanyId));
+            document.getElementById('addContactActivityBtn').addEventListener('click', () => openActivityModal('contact', currentContactId));
+
+            // Activity type selector
+            document.querySelectorAll('.activity-type-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.activity-type-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentActivityType = btn.dataset.type;
+                    document.getElementById('activityType').value = btn.dataset.type;
+                });
+            });
+
+            // Close activity modal on background click
+            document.getElementById('activityModal').addEventListener('click', (e) => {
+                if (e.target.id === 'activityModal') closeActivityModal();
             });
 
             // Hide company suggestions when clicking outside
@@ -3965,6 +2982,249 @@ async function loadTagsData() {
             });
         });
 
+        // ============= ACTIVITIES =============
+
+        async function loadActivitiesData() {
+            try {
+                companyActivities = await DataService.loadActivities();
+                contactActivities = companyActivities;
+                console.log('✓ Aktywności załadowane:', companyActivities.length);
+            } catch (error) {
+                console.warn('Nie udało się załadować aktywności:', error);
+                companyActivities = [];
+                contactActivities = [];
+            }
+        }
+
+        function openActivityModal(entityType, entityId) {
+            if (!entityId) {
+                showStatus('Najpierw wybierz rekord', 'error');
+                return;
+            }
+            
+            document.getElementById('activityEntityType').value = entityType;
+            document.getElementById('activityEntityId').value = entityId;
+            document.getElementById('activityType').value = 'EMAIL';
+            currentActivityType = 'EMAIL';
+            
+            // Reset form
+            document.getElementById('activityForm').reset();
+            document.getElementById('activityTitle').value = '';
+            document.getElementById('activityNotes').value = '';
+            
+            // Set default date (now)
+            const now = new Date();
+            const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+                .toISOString()
+                .slice(0, 16);
+            document.getElementById('activityDate').value = localDateTime;
+            
+            // Show/hide contact selector
+            const contactSelectorGroup = document.getElementById('activityContactSelectorGroup');
+            if (entityType === 'company') {
+                const companyContacts = contacts.filter(c => c.companyId === entityId);
+                const select = document.getElementById('activityContactSelect');
+                select.innerHTML = '<option value="">Tylko firma</option>' +
+                    companyContacts.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+                contactSelectorGroup.style.display = 'block';
+            } else {
+                contactSelectorGroup.style.display = 'none';
+            }
+            
+            document.getElementById('activityModal').classList.add('active');
+            document.getElementById('activityTitle').focus();
+        }
+
+        function closeActivityModal() {
+            document.getElementById('activityModal').classList.remove('active');
+            document.getElementById('activityForm').reset();
+        }
+
+        async function saveActivity(e) {
+            e.preventDefault();
+            
+            const entityType = document.getElementById('activityEntityType').value;
+            const entityId = document.getElementById('activityEntityId').value;
+            const type = currentActivityType;
+            const title = document.getElementById('activityTitle').value;
+            const date = document.getElementById('activityDate').value;
+            const notes = document.getElementById('activityNotes').value;
+            
+            let companyId = '';
+            let contactId = '';
+            
+            if (entityType === 'company') {
+                companyId = entityId;
+                const selectedContactId = document.getElementById('activityContactSelect').value;
+                if (selectedContactId) {
+                    contactId = selectedContactId;
+                }
+            } else if (entityType === 'contact') {
+                contactId = entityId;
+                const contact = contacts.find(c => c.id === contactId);
+                if (contact && contact.companyId) {
+                    companyId = contact.companyId;
+                }
+            }
+            
+            try {
+                await ActivitiesService.createActivity({
+                    type,
+                    title,
+                    date: new Date(date).toISOString(),
+                    notes,
+                    companyId,
+                    contactId,
+                    status: 'planned'
+                });
+                
+                showStatus('Aktywność dodana', 'success');
+                
+                await loadActivitiesData();
+                
+                if (currentCompanyId) {
+                    renderCompanyActivities(currentCompanyId);
+                    await loadCompanyHistory();
+                    renderCompanyHistory(currentCompanyId);
+                }
+                
+                if (currentContactId) {
+                    renderContactActivities(currentContactId);
+                    await loadContactHistory();
+                    renderContactHistory(currentContactId);
+                }
+                
+                closeActivityModal();
+            } catch (error) {
+                console.error('Błąd zapisu aktywności:', error);
+                showStatus('Błąd zapisu: ' + error.message, 'error');
+            }
+        }
+
+        function renderCompanyActivities(companyId) {
+            const list = document.getElementById('companyHistoryList');
+            const empty = document.getElementById('companyHistoryEmpty');
+            if (!list || !empty) return;
+            
+            const activities = companyActivities.filter(a => a.companyId === companyId);
+            
+            if (activities.length === 0) {
+                list.innerHTML = '';
+                empty.style.display = 'block';
+                empty.querySelector('h3').textContent = 'Brak aktywności';
+                empty.querySelector('p').textContent = 'Nie dodano jeszcze żadnych aktywności dla tej firmy.';
+                return;
+            }
+            
+            empty.style.display = 'none';
+            list.innerHTML = activities
+                .sort((a, b) => b.date.localeCompare(a.date))
+                .map(activity => {
+                    const formatted = ActivitiesService.formatActivity(activity);
+                    return `
+                        <div class="activity-item" style="border-left-color: ${formatted.typeColor}">
+                            <div class="activity-item-header">
+                                <span class="activity-item-icon">${formatted.typeIcon}</span>
+                                <span class="activity-item-type">${formatted.typeLabel}</span>
+                                <span class="activity-status ${activity.status}">${formatted.statusLabel}</span>
+                            </div>
+                            <div class="activity-item-title">${escapeHtml(formatted.title)}</div>
+                            <div class="activity-item-date">${formatted.formattedDate}</div>
+                            ${formatted.notes ? `<div class="activity-item-notes">${escapeHtml(formatted.notes)}</div>` : ''}
+                            <div class="activity-item-actions">
+                                ${activity.status === 'planned' ? `<button onclick="completeActivity('${activity.id}')">✓ Ukończ</button>` : ''}
+                                <button onclick="deleteActivity('${activity.id}')">🗑️ Usuń</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        function renderContactActivities(contactId) {
+            const list = document.getElementById('contactHistoryList');
+            const empty = document.getElementById('contactHistoryEmpty');
+            if (!list || !empty) return;
+            
+            const activities = contactActivities.filter(a => a.contactId === contactId);
+            
+            if (activities.length === 0) {
+                list.innerHTML = '';
+                empty.style.display = 'block';
+                empty.querySelector('h3').textContent = 'Brak aktywności';
+                empty.querySelector('p').textContent = 'Nie dodano jeszcze żadnych aktywności dla tego kontaktu.';
+                return;
+            }
+            
+            empty.style.display = 'none';
+            list.innerHTML = activities
+                .sort((a, b) => b.date.localeCompare(a.date))
+                .map(activity => {
+                    const formatted = ActivitiesService.formatActivity(activity);
+                    return `
+                        <div class="activity-item" style="border-left-color: ${formatted.typeColor}">
+                            <div class="activity-item-header">
+                                <span class="activity-item-icon">${formatted.typeIcon}</span>
+                                <span class="activity-item-type">${formatted.typeLabel}</span>
+                                <span class="activity-status ${activity.status}">${formatted.statusLabel}</span>
+                            </div>
+                            <div class="activity-item-title">${escapeHtml(formatted.title)}</div>
+                            <div class="activity-item-date">${formatted.formattedDate}</div>
+                            ${formatted.notes ? `<div class="activity-item-notes">${escapeHtml(formatted.notes)}</div>` : ''}
+                            <div class="activity-item-actions">
+                                ${activity.status === 'planned' ? `<button onclick="completeActivity('${activity.id}')">✓ Ukończ</button>` : ''}
+                                <button onclick="deleteActivity('${activity.id}')">🗑️ Usuń</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+        }
+
+        async function completeActivity(activityId) {
+            try {
+                await ActivitiesService.completeActivity(activityId);
+                showStatus('Aktywność ukończona', 'success');
+                
+                await loadActivitiesData();
+                
+                if (currentCompanyId) renderCompanyActivities(currentCompanyId);
+                if (currentContactId) renderContactActivities(currentContactId);
+            } catch (error) {
+                console.error('Błąd:', error);
+                showStatus('Błąd: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteActivity(activityId) {
+            if (!confirm('Czy na pewno chcesz usunąć tę aktywność?')) return;
+            
+            try {
+                await ActivitiesService.deleteActivity(activityId);
+                showStatus('Aktywność usunięta', 'success');
+                
+                await loadActivitiesData();
+                
+                if (currentCompanyId) {
+                    renderCompanyActivities(currentCompanyId);
+                    await loadCompanyHistory();
+                    renderCompanyHistory(currentCompanyId);
+                }
+                
+                if (currentContactId) {
+                    renderContactActivities(currentContactId);
+                    await loadContactHistory();
+                    renderContactHistory(currentContactId);
+                }
+            } catch (error) {
+                console.error('Błąd:', error);
+                showStatus('Błąd: ' + error.message, 'error');
+            }
+        }
+
+        // ============= EXPOSE FUNCTIONS TO WINDOW =============
+        window.openActivityModal = openActivityModal;
+        window.completeActivity = completeActivity;
+        window.deleteActivity = deleteActivity;
+
         // ============= START =============
         if (typeof gapi !== 'undefined') {
             init();
@@ -3974,86 +3234,5 @@ async function loadTagsData() {
             });
         }
     </script>
-
-    <!-- Tags Manager Modal -->
-    <div id="tagsManagerModal" class="modal tags-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Zarządzanie etykietami</h2>
-                <button class="close-btn" onclick="closeTagsManager()">×</button>
-            </div>
-
-            <!-- Tabs -->
-            <div class="tags-modal-tabs">
-                <button class="tags-modal-tab active" data-type="companies" onclick="switchTagsTab('companies')">
-                    Etykiety firm
-                </button>
-                <button class="tags-modal-tab" data-type="contacts" onclick="switchTagsTab('contacts')">
-                    Etykiety osób
-                </button>
-            </div>
-
-            <!-- Companies Tags Section -->
-            <div id="companiesTagsSection" class="tags-section active">
-                <div class="tag-form-section">
-                    <form id="companyTagForm" onsubmit="return saveCompanyTag(event)">
-                        <div class="form-group">
-                            <label>Nazwa etykiety</label>
-                            <input type="text" id="companyTagName" placeholder="np. VIP Klient" required>
-                            <input type="hidden" id="companyTagId">
-                            <input type="hidden" id="companyTagRowIndex">
-                        </div>
-                        <div class="form-group">
-                            <label>Kolor</label>
-                            <div class="color-picker-grid" id="companyTagColorPicker"></div>
-                            <input type="hidden" id="companyTagColor" value="#3b82f6">
-                        </div>
-                        <div class="form-group">
-                            <label>Opis <span class="optional">(opcjonalnie)</span></label>
-                            <textarea id="companyTagDescription" placeholder="Opis etykiety..." rows="2"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            <span id="companyTagSubmitText">Dodaj etykietę</span>
-                        </button>
-                    </form>
-                </div>
-                <div class="tags-list-section">
-                    <h3>Istniejące etykiety</h3>
-                    <div id="companyTagsList" class="tags-list"></div>
-                </div>
-            </div>
-
-            <!-- Contacts Tags Section -->
-            <div id="contactsTagsSection" class="tags-section" style="display: none;">
-                <div class="tag-form-section">
-                    <form id="contactTagForm" onsubmit="return saveContactTag(event)">
-                        <div class="form-group">
-                            <label>Nazwa etykiety</label>
-                            <input type="text" id="contactTagName" placeholder="np. Decydent" required>
-                            <input type="hidden" id="contactTagId">
-                            <input type="hidden" id="contactTagRowIndex">
-                        </div>
-                        <div class="form-group">
-                            <label>Kolor</label>
-                            <div class="color-picker-grid" id="contactTagColorPicker"></div>
-                            <input type="hidden" id="contactTagColor" value="#3b82f6">
-                        </div>
-                        <div class="form-group">
-                            <label>Opis <span class="optional">(opcjonalnie)</span></label>
-                            <textarea id="contactTagDescription" placeholder="Opis etykiety..." rows="2"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">
-                            <span id="contactTagSubmitText">Dodaj etykietę</span>
-                        </button>
-                    </form>
-                </div>
-                <div class="tags-list-section">
-                    <h3>Istniejące etykiety</h3>
-                    <div id="contactTagsList" class="tags-list"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
