@@ -1000,6 +1000,116 @@ export class DataService {
         });
     }
 
+    // ============= ACTIVITIES =============
+
+    /**
+     * ACTIVITIES - Load
+     */
+    static async loadActivities(useCache = true) {
+        const cacheKey = 'activities';
+        
+        if (useCache) {
+            const cached = this.getCache(cacheKey);
+            if (cached) {
+                console.log('✓ Aktywności załadowane z cache');
+                return cached;
+            }
+        }
+
+        return this.retryRequest(async () => {
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range: `${CONFIG.SHEETS.ACTIVITIES}!A2:J`,
+                });
+
+                const rows = response.result.values || [];
+                const activities = rows.map(row => ({
+                    id: row[0] || '',
+                    type: row[1] || '',
+                    title: row[2] || '',
+                    date: row[3] || '',
+                    notes: row[4] || '',
+                    companyId: row[5] || '',
+                    contactId: row[6] || '',
+                    status: row[7] || 'planned',
+                    createdBy: row[8] || '',
+                    createdAt: row[9] || ''
+                })).filter(a => a.id);
+
+                this.setCache(cacheKey, activities);
+                console.log(`✓ Załadowano ${activities.length} aktywności`);
+                return activities;
+            } catch (error) {
+                console.warn('Arkusz Activities nie istnieje:', error);
+                return [];
+            }
+        });
+    }
+
+    /**
+     * ACTIVITIES - Save (Create or Update)
+     */
+    static async saveActivity(activity, rowIndex = null) {
+        const values = [[
+            activity.id || this.generateId(),
+            activity.type || '',
+            activity.title || '',
+            activity.date || '',
+            activity.notes || '',
+            activity.companyId || '',
+            activity.contactId || '',
+            activity.status || 'planned',
+            activity.createdBy || AuthService.getUserEmail() || '',
+            activity.createdAt || new Date().toISOString()
+        ]];
+
+        const isUpdate = rowIndex !== null;
+        const range = isUpdate
+            ? `${CONFIG.SHEETS.ACTIVITIES}!A${rowIndex + 2}:J${rowIndex + 2}`
+            : `${CONFIG.SHEETS.ACTIVITIES}!A:J`;
+
+        return this.retryRequest(async () => {
+            if (isUpdate) {
+                await gapi.client.sheets.spreadsheets.values.update({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range,
+                    valueInputOption: 'USER_ENTERED',
+                    resource: { values }
+                });
+                console.log('✓ Aktywność zaktualizowana');
+            } else {
+                await gapi.client.sheets.spreadsheets.values.append({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range,
+                    valueInputOption: 'USER_ENTERED',
+                    resource: { values }
+                });
+                console.log('✓ Aktywność dodana');
+            }
+
+            this.clearCache('activities');
+            return values[0][0]; // Return ID
+        });
+    }
+
+    /**
+     * ACTIVITIES - Delete
+     */
+    static async deleteActivity(rowIndex) {
+        const range = `${CONFIG.SHEETS.ACTIVITIES}!A${rowIndex + 2}:J${rowIndex + 2}`;
+
+        return this.retryRequest(async () => {
+            await gapi.client.sheets.spreadsheets.values.clear({
+                spreadsheetId: CONFIG.SHEET_ID,
+                range
+            });
+            
+            this.clearCache('activities');
+            console.log('✓ Aktywność usunięta');
+        });
+    }
+
 }
 
 // Export dla kompatybilności bez ES6 modules
