@@ -889,6 +889,117 @@ export class DataService {
         return allContacts.filter(c => contactIds.includes(c.id));
     }
 
+    // ============= USER PREFERENCES =============
+
+    /**
+     * USER PREFERENCES - Load user preferences
+     */
+    static async loadUserPreferences(email, useCache = true) {
+        if (!email) {
+            console.warn('Brak emaila - nie można załadować preferencji');
+            return null;
+        }
+
+        const cacheKey = `user_prefs_${email}`;
+        
+        if (useCache) {
+            const cached = this.getCache(cacheKey);
+            if (cached) {
+                console.log('✓ Preferencje użytkownika załadowane z cache');
+                return cached;
+            }
+        }
+
+        return this.retryRequest(async () => {
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range: `${CONFIG.SHEETS.USER_PREFERENCES}!A2:D`,
+                });
+
+                const rows = response.result.values || [];
+                const userPref = rows.find(row => row[0] && row[0].toLowerCase() === email.toLowerCase());
+                
+                if (!userPref) {
+                    console.log('Brak preferencji dla użytkownika:', email);
+                    return null;
+                }
+
+                const prefs = {
+                    email: userPref[0] || '',
+                    displayName: userPref[1] || '',
+                    createdAt: userPref[2] || '',
+                    updatedAt: userPref[3] || ''
+                };
+
+                this.setCache(cacheKey, prefs);
+                console.log('✓ Preferencje użytkownika załadowane:', prefs.displayName);
+                return prefs;
+            } catch (error) {
+                console.warn('Arkusz UserPreferences nie istnieje lub jest pusty:', error);
+                return null;
+            }
+        });
+    }
+
+    /**
+     * USER PREFERENCES - Save user preferences
+     */
+    static async saveUserPreferences(email, displayName) {
+        if (!email) {
+            throw new Error('Email jest wymagany');
+        }
+
+        return this.retryRequest(async () => {
+            // Najpierw sprawdź czy użytkownik już ma preferencje
+            const response = await gapi.client.sheets.spreadsheets.values.get({
+                spreadsheetId: CONFIG.SHEET_ID,
+                range: `${CONFIG.SHEETS.USER_PREFERENCES}!A2:D`,
+            });
+
+            const rows = response.result.values || [];
+            const userIndex = rows.findIndex(row => row[0] && row[0].toLowerCase() === email.toLowerCase());
+            const isUpdate = userIndex !== -1;
+
+            const values = [[
+                email,
+                displayName || '',
+                isUpdate ? rows[userIndex][2] : new Date().toISOString(), // createdAt
+                new Date().toISOString() // updatedAt
+            ]];
+
+            if (isUpdate) {
+                // Update existing row
+                const range = `${CONFIG.SHEETS.USER_PREFERENCES}!A${userIndex + 2}:D${userIndex + 2}`;
+                await gapi.client.sheets.spreadsheets.values.update({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range,
+                    valueInputOption: 'USER_ENTERED',
+                    resource: { values }
+                });
+                console.log('✓ Preferencje użytkownika zaktualizowane');
+            } else {
+                // Append new row
+                await gapi.client.sheets.spreadsheets.values.append({
+                    spreadsheetId: CONFIG.SHEET_ID,
+                    range: `${CONFIG.SHEETS.USER_PREFERENCES}!A:D`,
+                    valueInputOption: 'USER_ENTERED',
+                    resource: { values }
+                });
+                console.log('✓ Preferencje użytkownika utworzone');
+            }
+
+            // Clear cache
+            this.clearCache(`user_prefs_${email}`);
+            
+            return {
+                email,
+                displayName,
+                updatedAt: values[0][3]
+            };
+        });
+    }
+
 }
 
 // Export dla kompatybilności bez ES6 modules
