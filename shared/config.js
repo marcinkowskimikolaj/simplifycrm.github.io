@@ -24,7 +24,9 @@ export const CONFIG = {
         COMPANY_TAGS_RELATIONS: 'CompanyTags',
         CONTACT_TAGS_RELATIONS: 'ContactTags',
         // Arkusz preferencji użytkownika  
-        USER_PREFERENCES: 'UserPreferences'
+        USER_PREFERENCES: 'UserPreferences',
+        // Arkusz aktywności
+        ACTIVITIES: 'Activities'
     },
     
     // OAuth Scopes
@@ -57,7 +59,7 @@ export const CONFIG = {
     // App Info
     APP: {
         NAME: 'Simplify CRM',
-        VERSION: '2.0.0',
+        VERSION: '2.1.0',
         TAGLINE: 'Twój partner w interesach'
     },
     
@@ -83,6 +85,49 @@ export const CONFIG = {
             '#f43f5e', // rose
             '#64748b'  // slate
         ]
+    },
+    
+    // Activities Configuration
+    ACTIVITIES: {
+        TYPES: {
+            EMAIL: {
+                id: 'EMAIL',
+                label: 'Email',
+                icon: '📧',
+                color: '#3b82f6',
+                requiresTitle: true,
+                requiresDate: true
+            },
+            PHONE: {
+                id: 'PHONE',
+                label: 'Telefon',
+                icon: '📞',
+                color: '#10b981',
+                requiresTitle: true,
+                requiresDate: true
+            },
+            MEETING: {
+                id: 'MEETING',
+                label: 'Spotkanie',
+                icon: '🤝',
+                color: '#8b5cf6',
+                requiresTitle: true,
+                requiresDate: true
+            },
+            TASK: {
+                id: 'TASK',
+                label: 'Zadanie',
+                icon: '✅',
+                color: '#f59e0b',
+                requiresTitle: true,
+                requiresDate: false
+            }
+        },
+        STATUSES: {
+            PLANNED: 'planned',
+            COMPLETED: 'completed',
+            CANCELLED: 'cancelled'
+        }
     }
 };
 
