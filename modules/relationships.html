@@ -2138,18 +2138,21 @@
                 <h2 id="companyModalTitle">Dodaj firmę</h2>
                 <button class="close-btn" id="closeCompanyModalBtn">&times;</button>
             </div>
-            <form id="companyForm">
+<form id="companyForm">
                 <div class="form-group">
                     <label for="companyName">Nazwa firmy *</label>
                     <input type="text" id="companyName" required>
                 </div>
                 <div class="form-group">
-                    <label for="companyIndustry">Branża <span class="optional">(opcjonalnie)</span></label>
-                    <input type="text" id="companyIndustry" placeholder="np. IT, Marketing, Finanse">
+                    <label for="companyDomain">Domena <span class="optional">(opcjonalnie)</span></label>
+                    <input type="text" id="companyDomain" placeholder="np. techcorp.pl">
+                    <small style="display: block; margin-top: 0.4rem; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
+                        💡 Strona WWW zostanie utworzona automatycznie na podstawie domeny.
+                    </small>
                 </div>
                 <div class="form-group">
-                    <label for="companyWebsite">Strona WWW <span class="optional">(opcjonalnie)</span></label>
-                    <input type="url" id="companyWebsite" placeholder="np. https://twojafirma.pl">
+                    <label for="companyIndustry">Branża <span class="optional">(opcjonalnie)</span></label>
+                    <input type="text" id="companyIndustry" placeholder="np. IT, Marketing, Finanse">
                 </div>
                 <div class="form-group">
                     <label for="companyPhone">Telefon firmowy <span class="optional">(opcjonalnie)</span></label>
@@ -2164,11 +2167,10 @@
                     <input type="text" id="companyCountry" placeholder="np. Polska">
                 </div>
                 <div class="form-group">
-                    <label for="companyDomain">Domena <span class="optional">(opcjonalnie)</span></label>
-                    <input type="text" id="companyDomain" placeholder="np. techcorp.pl">
-                    <small style="display: block; margin-top: 0.4rem; font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5;">
-                        💡 Służy do automatycznego przypisywania kontaktów po domenie email
-                    </small>
+                    <label>Etykiety</label>
+                    <div id="companyTagsSelector" class="tags-selector-container">
+                        <span style="font-size:0.8rem; color:var(--text-secondary);">Najpierw utwórz etykiety w ustawieniach (ikona 🏷️)</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="companyNotes">Notatki <span class="optional">(opcjonalnie)</span></label>
@@ -2884,19 +2886,26 @@
             document.getElementById('companyModal').classList.add('active');
         }
 
-        function editCompany(index) {
+function editCompany(index) {
             editingCompanyIndex = index;
             const company = companies[index];
             document.getElementById('companyModalTitle').textContent = 'Edytuj firmę';
             document.getElementById('companyName').value = company.name;
             document.getElementById('companyIndustry').value = company.industry || '';
-            document.getElementById('companyWebsite').value = company.website || '';
+            // USUNIĘTO: companyWebsite - pole nie istnieje w formularzu
             document.getElementById('companyPhone').value = company.phone || '';
             document.getElementById('companyCity').value = company.city || '';
             document.getElementById('companyCountry').value = company.country || '';
             document.getElementById('companyDomain').value = company.domain || '';
             document.getElementById('companyNotes').value = company.notes || '';
+            
+            // Render tags selector if function exists
+            if (typeof renderTagSelector === 'function') {
+                renderTagSelector('companyTagsSelector', 'company', company.tags || '');
+            }
+            
             document.getElementById('companyModal').classList.add('active');
+        }
         }
 
         function editCompanyFromDetail(companyId) {
@@ -2904,18 +2913,102 @@
             if (index !== -1) editCompany(index);
         }
 
-        async function saveCompany(e) {
+async function saveCompany(e) {
             e.preventDefault();
+
+            // 1. Pobierz wartości
+            const name = document.getElementById('companyName').value.trim();
+            const domain = document.getElementById('companyDomain').value.trim();
+            const phone = document.getElementById('companyPhone').value.trim();
+            const industry = document.getElementById('companyIndustry').value.trim();
+            const city = document.getElementById('companyCity').value.trim();
+            const country = document.getElementById('companyCountry').value.trim();
+            const notes = document.getElementById('companyNotes').value.trim();
+            
+            // 2. Automatyczne generowanie WWW z domeny
+            let website = '';
+            if (domain) {
+                website = domain.startsWith('http') ? domain : `https://${domain}`;
+            } else if (editingCompanyIndex !== null) {
+                // Przy edycji: jeśli nie wpisano nowej domeny, zachowaj stare WWW (zabezpieczenie)
+                website = companies[editingCompanyIndex].website || '';
+            }
+
+            // === DEDUPLIKACJA START ===
+            const cleanUrl = (url) => url ? url.toLowerCase().replace(/^(?:https?:\/\/)?(?:www\.)?/i, '').replace(/\/$/, '') : '';
+            const cleanPhone = (ph) => ph ? ph.replace(/[\s-]/g, '') : '';
+            const cleanName = (str) => str ? str.toLowerCase().replace(/\b(sp\.? ?z ?o\.?o\.?|s\.?a\.?|inc\.?|ltd\.?|gmbh)\b/g, '').replace(/[.,"\-]/g, '').replace(/\s+/g, ' ').trim() : '';
+
+            if (!window.skipDuplicateCheck) {
+                const currentId = editingCompanyIndex !== null ? companies[editingCompanyIndex].id : null;
+                const inputCleanWeb = cleanUrl(website);
+                const inputCleanDomain = cleanUrl(domain);
+                const inputCleanPhone = cleanPhone(phone);
+                const inputCleanName = cleanName(name);
+
+                const duplicate = companies.find(c => {
+                    if (c.id === currentId) return false;
+                    
+                    // A. Nazwa
+                    const storedCleanName = cleanName(c.name);
+                    const matchName = inputCleanName && storedCleanName && inputCleanName === storedCleanName;
+
+                    // B. WWW / Domena
+                    const storedWeb = cleanUrl(c.website);
+                    const storedDomain = cleanUrl(c.domain);
+                    const matchWeb = (inputCleanWeb && (inputCleanWeb === storedWeb || inputCleanWeb === storedDomain)) ||
+                                     (inputCleanDomain && (inputCleanDomain === storedWeb || inputCleanDomain === storedDomain));
+
+                    // C. Telefon
+                    const matchPhone = inputCleanPhone && cleanPhone(c.phone) === inputCleanPhone;
+
+                    return matchName || matchWeb || matchPhone;
+                });
+
+                if (duplicate) {
+                    const modal = document.getElementById('duplicateModal');
+                    const content = document.getElementById('duplicateContent');
+                    const saveAnywayBtn = document.getElementById('saveAnywayBtn');
+                    const backBtn = document.getElementById('backToEditBtn');
+
+                    content.innerHTML = `
+                        <div>Znaleziono firmę o podobnych danych:</div>
+                        <div style="background:rgba(15,23,42,0.05); padding:12px; border-radius:8px; margin-top:10px; border:1px solid var(--border-subtle);">
+                            <div style="font-size:1.1em; font-weight:600;">🏢 ${escapeHtml(duplicate.name)}</div>
+                            ${duplicate.domain ? `<div>🌐 ${escapeHtml(duplicate.domain)}</div>` : ''}
+                            ${duplicate.phone ? `<div>📞 ${escapeHtml(duplicate.phone)}</div>` : ''}
+                        </div>
+                        <div style="margin-top:15px; font-size:0.9rem;">Czy na pewno chcesz utworzyć nową?</div>
+                    `;
+                    modal.classList.add('active');
+                    
+                    saveAnywayBtn.onclick = () => { 
+                        window.skipDuplicateCheck = true; 
+                        modal.classList.remove('active'); 
+                        document.getElementById('companyForm').requestSubmit(); 
+                    };
+                    backBtn.onclick = () => { 
+                        modal.classList.remove('active'); 
+                        window.skipDuplicateCheck = false; 
+                    };
+                    return; 
+                }
+            }
+            window.skipDuplicateCheck = false;
+            // === DEDUPLIKACJA KONIEC ===
+
+            // Pobierz tagi (jeśli funkcja dostępna)
+            let tagsIds = '';
+            if (typeof getSelectedTagsFromSelector === 'function') {
+                tagsIds = getSelectedTagsFromSelector('companyTagsSelector');
+            } else if (editingCompanyIndex !== null) {
+                tagsIds = companies[editingCompanyIndex].tags || '';
+            }
+
             const company = {
                 id: editingCompanyIndex !== null ? companies[editingCompanyIndex].id : DataService.generateId(),
-                name: document.getElementById('companyName').value,
-                industry: document.getElementById('companyIndustry').value,
-                website: document.getElementById('companyWebsite').value,
-                phone: document.getElementById('companyPhone').value,
-                city: document.getElementById('companyCity').value,
-                country: document.getElementById('companyCountry').value,
-                domain: document.getElementById('companyDomain').value,
-                notes: document.getElementById('companyNotes').value
+                name, industry, website, phone, city, country, domain, notes,
+                tags: tagsIds
             };
 
             try {
