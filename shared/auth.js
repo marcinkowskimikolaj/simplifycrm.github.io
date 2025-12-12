@@ -10,6 +10,7 @@ import { CONFIG } from './config.js';
 export class AuthService {
     static SESSION_KEY = CONFIG.SESSION.KEY;
     static TOKEN_REFRESH_THRESHOLD = CONFIG.SESSION.TOKEN_REFRESH_THRESHOLD;
+    static DISPLAY_NAME_KEY = 'simplify_crm_display_name';
 
     /**
      * Sprawdza czy użytkownik jest zalogowany
@@ -87,6 +88,7 @@ export class AuthService {
      */
     static clearSession() {
         localStorage.removeItem(this.SESSION_KEY);
+        localStorage.removeItem(this.DISPLAY_NAME_KEY);
         console.log('✓ Sesja wyczyszczona');
     }
 
@@ -106,6 +108,56 @@ export class AuthService {
     static getUserEmail() {
         const session = this.getSession();
         return session ? session.email : null;
+    }
+
+    /**
+     * Pobiera display name użytkownika (imię)
+     * @returns {string|null}
+     */
+    static getDisplayName() {
+        try {
+            return localStorage.getItem(this.DISPLAY_NAME_KEY) || null;
+        } catch (error) {
+            console.error('Błąd odczytu display name:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Zapisuje display name użytkownika
+     * @param {string} displayName
+     */
+    static saveDisplayName(displayName) {
+        try {
+            if (displayName) {
+                localStorage.setItem(this.DISPLAY_NAME_KEY, displayName);
+                console.log('✓ Display name zapisane:', displayName);
+            } else {
+                localStorage.removeItem(this.DISPLAY_NAME_KEY);
+                console.log('✓ Display name usunięte');
+            }
+        } catch (error) {
+            console.error('Błąd zapisu display name:', error);
+        }
+    }
+
+    /**
+     * Pobiera nazwę do wyświetlenia (imię lub email)
+     * @returns {string}
+     */
+    static getUserDisplayText() {
+        const displayName = this.getDisplayName();
+        if (displayName) {
+            return displayName;
+        }
+        
+        const email = this.getUserEmail();
+        if (email) {
+            // Jeśli brak display name, wyświetl część emaila przed @
+            return email.split('@')[0];
+        }
+        
+        return 'Użytkownik';
     }
 
     /**
@@ -273,6 +325,7 @@ export class AuthService {
 
         console.log('🔓 Sesja aktywna:', {
             email: session.email,
+            displayName: this.getDisplayName(),
             tokenExpiry: new Date(session.tokenExpiry).toLocaleString('pl-PL'),
             minutesToExpiry: minutesToExpiry,
             lastActivity: new Date(session.lastActivity).toLocaleString('pl-PL'),
