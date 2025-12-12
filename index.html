@@ -958,7 +958,7 @@
                                 ${escapeHtml(text.substring(0, 100))}${text.length > 100 ? '...' : ''}
                             </div>
                             <div class="activity-meta">
-                                ${timeAgo}${entry.user ? ' • ' + escapeHtml(entry.user) : ''}
+                                ${timeAgo}${entry.user ? ' • ' + escapeHtml(formatUserName(entry.user)) : ''}
                             </div>
                         </div>
                     </div>
@@ -976,6 +976,29 @@
                 return contact ? contact.name : null;
             }
             return null;
+        }
+
+        /**
+         * Konwertuje email na display name jeśli to jest aktualny użytkownik
+         */
+        function formatUserName(userName) {
+            if (!userName) return '';
+            
+            const currentEmail = AuthService.getUserEmail();
+            const displayName = AuthService.getDisplayName();
+            
+            // Jeśli userName to email aktualnego użytkownika i mamy display name
+            if (userName === currentEmail && displayName) {
+                return displayName;
+            }
+            
+            // Jeśli userName to email aktualnego użytkownika ale nie ma display name
+            if (userName === currentEmail) {
+                return currentEmail.split('@')[0];
+            }
+            
+            // Dla innych użytkowników - zwróć jak jest (może być email lub już display name)
+            return userName;
         }
 
         function getTimeAgo(isoString) {
