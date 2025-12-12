@@ -87,6 +87,34 @@
             white-space: nowrap;
         }
 
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .icon-btn:hover {
+            background: rgba(15,23,42,0.03);
+            border-color: var(--border-strong);
+            box-shadow: 0 4px 12px rgba(15,23,42,0.12);
+            transform: translateY(-1px);
+        }
+
+        .icon-btn svg {
+            opacity: 0.7;
+        }
+
+        .icon-btn:hover svg {
+            opacity: 1;
+        }
+
         .logout-btn {
             display: inline-flex;
             align-items: center;
@@ -421,6 +449,165 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* PROFILE MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,0.55);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            background: var(--surface);
+            border-radius: 24px;
+            border: 1px solid var(--border-subtle);
+            padding: 2rem 2.2rem;
+            box-shadow: var(--shadow-soft);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .modal-header h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.9rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .close-btn {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            cursor: pointer;
+            font-size: 1.4rem;
+            line-height: 1;
+            transition: all 0.18s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(15,23,42,0.04);
+            border-color: var(--border-strong);
+        }
+
+        .form-group {
+            margin-bottom: 1.4rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            background: var(--surface);
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            transition: border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(15,23,42,0.08);
+        }
+
+        .form-hint {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .form-current {
+            display: block;
+            margin-top: 0.4rem;
+            padding: 0.7rem 1rem;
+            background: rgba(15,23,42,0.04);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .form-current strong {
+            color: var(--text-primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.9rem 1.6rem;
+            border-radius: var(--radius-chip);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: #f5f1ed;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(15,23,42,0.24);
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--border-strong);
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(15,23,42,0.03);
+            border-color: var(--text-primary);
+        }
     </style>
 </head>
 <body>
@@ -432,6 +619,12 @@
             </div>
             <div class="app-header-right">
                 <span class="user-email" id="userEmail">Ładowanie...</span>
+                <button id="profileBtn" class="icon-btn" title="Personalizacja konta" style="margin-right: 0.8rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </button>
                 <button id="logoutBtn" class="logout-btn">Wyloguj</button>
             </div>
         </div>
@@ -556,6 +749,49 @@
         </section>
     </main>
 
+    <!-- PROFILE MODAL -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Personalizacja konta</h2>
+                <button class="close-btn" id="closeProfileBtn">&times;</button>
+            </div>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="displayName">Twoje imię</label>
+                    <input 
+                        type="text" 
+                        id="displayName" 
+                        placeholder="np. Anna, Marcin..."
+                        maxlength="50"
+                    >
+                    <p class="form-hint">
+                        💡 To imię będzie wyświetlane zamiast emaila w nagłówku, na stronie głównej oraz w historii aktywności.
+                    </p>
+                    <div class="form-current">
+                        <strong>Obecnie:</strong> <span id="currentDisplay">ładowanie...</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Twój email</label>
+                    <input 
+                        type="email" 
+                        id="userEmailDisplay" 
+                        disabled
+                        style="opacity: 0.7; cursor: not-allowed;"
+                    >
+                    <p class="form-hint">
+                        Email jest przypisany do konta Google i nie można go zmienić.
+                    </p>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelProfileBtn">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Google APIs -->
     <script src="https://apis.google.com/js/api.js" async defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -580,8 +816,20 @@
                 // Set user email in header
                 const email = AuthService.getUserEmail();
                 if (email) {
-                    document.getElementById('userEmail').textContent = email;
-                    document.getElementById('welcomeTitle').textContent = `Witaj, ${email.split('@')[0]}! 👋`;
+                    // Load user preferences
+                    await loadUserPreferences(email);
+                    
+                    // Display name or email
+                    const displayText = AuthService.getUserDisplayText();
+                    document.getElementById('userEmail').textContent = displayText;
+                    
+                    // Welcome message
+                    const displayName = AuthService.getDisplayName();
+                    if (displayName) {
+                        document.getElementById('welcomeTitle').textContent = `Witaj, ${displayName}! 👋`;
+                    } else {
+                        document.getElementById('welcomeTitle').textContent = `Witaj, ${email.split('@')[0]}! 👋`;
+                    }
                 }
 
                 // Set current date
@@ -765,10 +1013,120 @@
             document.getElementById('activitySection').style.display = 'block';
         }
 
+        // ============= USER PREFERENCES =============
+        async function loadUserPreferences(email) {
+            try {
+                const prefs = await DataService.loadUserPreferences(email);
+                if (prefs && prefs.displayName) {
+                    AuthService.saveDisplayName(prefs.displayName);
+                    console.log('✓ Załadowano preferencje użytkownika:', prefs.displayName);
+                }
+            } catch (error) {
+                console.warn('Nie udało się załadować preferencji użytkownika:', error);
+                // Nie blokuj działania aplikacji
+            }
+        }
+
+        function openProfileModal() {
+            const email = AuthService.getUserEmail();
+            const displayName = AuthService.getDisplayName();
+            const displayText = AuthService.getUserDisplayText();
+            
+            document.getElementById('userEmailDisplay').value = email || '';
+            document.getElementById('displayName').value = displayName || '';
+            document.getElementById('currentDisplay').textContent = displayText;
+            
+            document.getElementById('profileModal').classList.add('active');
+            document.getElementById('displayName').focus();
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+            document.getElementById('profileForm').reset();
+        }
+
+        async function saveProfile(event) {
+            event.preventDefault();
+            
+            const email = AuthService.getUserEmail();
+            const displayName = document.getElementById('displayName').value.trim();
+            
+            if (!email) {
+                alert('Błąd: brak emaila użytkownika');
+                return;
+            }
+            
+            try {
+                // Save to Google Sheets
+                await DataService.saveUserPreferences(email, displayName);
+                
+                // Save to localStorage
+                AuthService.saveDisplayName(displayName);
+                
+                // Update UI
+                const displayText = AuthService.getUserDisplayText();
+                document.getElementById('userEmail').textContent = displayText;
+                
+                if (displayName) {
+                    document.getElementById('welcomeTitle').textContent = `Witaj, ${displayName}! 👋`;
+                } else {
+                    document.getElementById('welcomeTitle').textContent = `Witaj, ${email.split('@')[0]}! 👋`;
+                }
+                
+                // Show success message
+                showStatus('✓ Profil zaktualizowany!');
+                
+                closeProfileModal();
+            } catch (error) {
+                console.error('Błąd zapisu profilu:', error);
+                alert('Wystąpił błąd podczas zapisu profilu. Sprawdź konsolę.');
+            }
+        }
+
+        function showStatus(message) {
+            const statusDiv = document.createElement('div');
+            statusDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #111827;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 10000;
+                font-family: 'Outfit', sans-serif;
+                font-size: 0.85rem;
+                font-weight: 600;
+                letter-spacing: 0.05em;
+            `;
+            statusDiv.textContent = message;
+            document.body.appendChild(statusDiv);
+            
+            setTimeout(() => {
+                statusDiv.style.opacity = '0';
+                statusDiv.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => statusDiv.remove(), 300);
+            }, 2500);
+        }
+
         // ============= LOGOUT =============
         document.getElementById('logoutBtn').addEventListener('click', () => {
             if (confirm('Czy na pewno chcesz się wylogować?')) {
                 AuthService.logout();
+            }
+        });
+
+        // ============= PROFILE =============
+        document.getElementById('profileBtn').addEventListener('click', openProfileModal);
+        document.getElementById('closeProfileBtn').addEventListener('click', closeProfileModal);
+        document.getElementById('cancelProfileBtn').addEventListener('click', closeProfileModal);
+        document.getElementById('profileForm').addEventListener('submit', saveProfile);
+
+        // Close modal on background click
+        document.getElementById('profileModal').addEventListener('click', (e) => {
+            if (e.target.id === 'profileModal') {
+                closeProfileModal();
             }
         });
 
