@@ -1413,22 +1413,21 @@
             height: 14px;
         }
 
-        /* Tag Badge - Minimal bars for cards */
+        /* Tag Badge - Minimal horizontal bars for cards */
         .tag-badge {
             position: relative;
-            width: 4px;
-            height: 20px;
+            width: 24px;
+            height: 4px;
             border-radius: 2px;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             flex-shrink: 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .tag-badge:hover {
-            height: 26px;
-            width: 5px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            height: 5px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
             transform: translateY(-1px);
         }
 
@@ -1491,78 +1490,135 @@
             border-top: 1px solid var(--border-subtle);
         }
 
-        /* Tags in detail view - elegant horizontal bar */
-        .detail-tags-bar {
+        /* Tags in detail view - inline with other info */
+        .detail-tags-inline {
             display: flex;
             align-items: center;
-            gap: 0.65rem;
-            padding: 1rem 1.3rem;
-            background: linear-gradient(135deg, rgba(17, 24, 39, 0.02), rgba(17, 24, 39, 0.04));
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            margin-top: 1.2rem;
+            gap: 0.5rem;
             flex-wrap: wrap;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
         }
 
-        .detail-tags-bar .tag-badge-detail {
+        .detail-tag-item {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 7px;
-            font-size: 0.7rem;
+            gap: 0.35rem;
+            padding: 0.3rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
             font-weight: 600;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
             color: white;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
         }
 
-        .detail-tags-bar .tag-badge-detail:hover {
+        .detail-tag-item:hover {
             filter: brightness(1.08);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
 
-        .detail-tags-bar .tag-badge-detail .remove-tag-btn {
-            margin-left: 0.35rem;
-            background: rgba(255, 255, 255, 0.2);
+        .detail-tag-item .remove-tag-btn {
+            background: rgba(255, 255, 255, 0.25);
             border: none;
             color: white;
             cursor: pointer;
-            width: 17px;
-            height: 17px;
+            width: 15px;
+            height: 15px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             line-height: 1;
-            transition: all 0.18s ease;
+            transition: all 0.15s ease;
             font-weight: 700;
+            padding: 0;
         }
 
-        .detail-tags-bar .tag-badge-detail .remove-tag-btn:hover {
+        .detail-tag-item .remove-tag-btn:hover {
             background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.15);
+        }
+
+        /* Add tag button - small plus icon */
+        .add-tag-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .add-tag-btn:hover {
+            background: rgba(17, 24, 39, 0.04);
+            border-color: var(--text-primary);
+            color: var(--text-primary);
             transform: scale(1.1);
         }
 
-        .detail-tags-label {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            font-weight: 700;
-            color: var(--text-secondary);
+        /* Inline tag dropdown */
+        .tag-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 0.4rem;
+            min-width: 180px;
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .detail-tags-empty {
-            font-size: 0.75rem;
+        .tag-dropdown.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .tag-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.7rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+            font-size: 0.8rem;
+        }
+
+        .tag-dropdown-item:hover {
+            background: rgba(17, 24, 39, 0.04);
+        }
+
+        .tag-dropdown-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .tag-dropdown-empty {
+            padding: 1rem;
+            text-align: center;
             color: var(--text-secondary);
+            font-size: 0.75rem;
             font-style: italic;
-            opacity: 0.7;
         }
 
         /* Empty state for tags */
@@ -2482,30 +2538,21 @@
                 </div>
                 ${company.industry ? `<div class="detail-meta">${escapeHtml(company.industry)}</div>` : ''}
                 
-                <!-- Tags Bar - at the top -->
-                ${renderDetailTags(company.id, 'company')}
-                
-                <div class="detail-info">${infoHtml || '<div class="detail-info-row"><div class="detail-info-label">Informacje</div><div class="detail-info-value">Brak dodatkowych informacji.</div></div>'}</div>
-            
-                
-                <!-- Tag Assignment -->
-                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
-                    <div style="margin-bottom: 0.8rem;">
-                        <span style="font-family: 'Outfit', sans-serif; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--text-secondary);">Dodaj etykietę</span>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <select id="companyTagSelect" class="form-input" style="flex: 1;">
-                            <option value="">Wybierz etykietę...</option>
-                            ${companyTags.map(tag => `
-                                <option value="${tag.id}">${escapeHtml(tag.name)}</option>
-                            `).join('')}
-                        </select>
-                        <button onclick="assignTagToCompanyDetail()" class="btn btn-secondary" style="white-space: nowrap;">
-                            + Dodaj
-                        </button>
-                    </div>
+                <div class="detail-info">
+                    ${infoHtml || '<div class="detail-info-row"><div class="detail-info-label">Informacje</div><div class="detail-info-value">Brak dodatkowych informacji.</div></div>'}
+                    
+                    ${renderDetailTags(company.id, 'company')}
                 </div>
             `;
+            
+            // Setup tag dropdown toggle
+            const addBtn = document.getElementById('addCompanyTagBtn');
+            if (addBtn) {
+                addBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleTagDropdown('companyTagDropdown', 'addCompanyTagBtn');
+                });
+            }
 
             renderCompanyContacts(companyId);
             renderCompanyHistory(companyId);
@@ -2579,29 +2626,21 @@
                 </div>
                 ${contact.position ? `<div class="detail-meta">${escapeHtml(contact.position)}</div>` : ''}
                 
-                <!-- Tags Bar - at the top -->
-                ${renderDetailTags(contact.id, 'contact')}
-                
-                <div class="detail-info">${infoHtml || '<div class="detail-info-row"><div class="detail-info-label">Informacje</div><div class="detail-info-value">Brak dodatkowych informacji.</div></div>'}</div>
-                
-                <!-- Tag Assignment -->
-                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
-                    <div style="margin-bottom: 0.8rem;">
-                        <span style="font-family: 'Outfit', sans-serif; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--text-secondary);">Dodaj etykietę</span>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <select id="contactTagSelect" class="form-input" style="flex: 1;">
-                            <option value="">Wybierz etykietę...</option>
-                            ${contactTags.map(tag => `
-                                <option value="${tag.id}">${escapeHtml(tag.name)}</option>
-                            `).join('')}
-                        </select>
-                        <button onclick="assignTagToContactDetail()" class="btn btn-secondary" style="white-space: nowrap;">
-                            + Dodaj
-                        </button>
-                    </div>
+                <div class="detail-info">
+                    ${infoHtml || '<div class="detail-info-row"><div class="detail-info-label">Informacje</div><div class="detail-info-value">Brak dodatkowych informacji.</div></div>'}
+                    
+                    ${renderDetailTags(contact.id, 'contact')}
                 </div>
             `;
+            
+            // Setup tag dropdown toggle
+            const addBtn = document.getElementById('addContactTagBtn');
+            if (addBtn) {
+                addBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleTagDropdown('contactTagDropdown', 'addContactTagBtn');
+                });
+            }
 
             const companyContainer = document.getElementById('contactCompanyCardContainer');
             const companyEmpty = document.getElementById('contactCompanyEmpty');
@@ -3443,7 +3482,7 @@ async function assignTagToEntity(entityId, tagId, type) {
 }
 
 /**
- * Render tags in detail view (elegant horizontal bar)
+ * Render tags in detail view (inline with other info)
  */
 function renderDetailTags(entityId, type) {
     const allTags = type === 'company' ? companyTags : contactTags;
@@ -3453,68 +3492,75 @@ function renderDetailTags(entityId, type) {
         ? DataService.getCompanyTags(entityId, allTags, allRelations)
         : DataService.getContactTags(entityId, allTags, allRelations);
     
-    if (entityTags.length === 0) {
-        return `
-            <div class="detail-tags-bar">
-                <span class="detail-tags-label">Etykiety:</span>
-                <span class="detail-tags-empty">Brak etykiet</span>
-            </div>
-        `;
-    }
+    const availableTags = allTags.filter(tag => 
+        !entityTags.find(et => et.id === tag.id)
+    );
+    
+    const dropdownId = type === 'company' ? 'companyTagDropdown' : 'contactTagDropdown';
+    const addBtnId = type === 'company' ? 'addCompanyTagBtn' : 'addContactTagBtn';
     
     return `
-        <div class="detail-tags-bar">
-            <span class="detail-tags-label">Etykiety:</span>
-            ${entityTags.map(tag => `
-                <div class="tag-badge-detail" style="background-color: ${tag.color}">
-                    ${escapeHtml(tag.name)}
-                    <button 
-                        class="remove-tag-btn" 
-                        onclick="event.stopPropagation(); removeTagFromDetail('${entityId}', '${tag.id}', '${type}')"
-                        title="Usuń etykietę">×</button>
+        <div class="detail-info-row">
+            <div class="detail-info-label">Etykiety</div>
+            <div class="detail-info-value" style="position: relative;">
+                <div class="detail-tags-inline">
+                    ${entityTags.length > 0 ? entityTags.map(tag => `
+                        <div class="detail-tag-item" style="background-color: ${tag.color}">
+                            ${escapeHtml(tag.name)}
+                            <button 
+                                class="remove-tag-btn" 
+                                onclick="event.stopPropagation(); removeTagFromDetail('${entityId}', '${tag.id}', '${type}')"
+                                title="Usuń">×</button>
+                        </div>
+                    `).join('') : '<span style="color: var(--text-secondary); font-style: italic; font-size: 0.85rem;">Brak etykiet</span>'}
+                    
+                    <button class="add-tag-btn" id="${addBtnId}" title="Dodaj etykietę">+</button>
                 </div>
-            `).join('')}
+                
+                <!-- Dropdown for adding tags -->
+                <div class="tag-dropdown" id="${dropdownId}">
+                    ${availableTags.length > 0 ? availableTags.map(tag => `
+                        <div class="tag-dropdown-item" onclick="quickAssignTag('${entityId}', '${tag.id}', '${type}')">
+                            <div class="tag-dropdown-color" style="background-color: ${tag.color}"></div>
+                            <span>${escapeHtml(tag.name)}</span>
+                        </div>
+                    `).join('') : '<div class="tag-dropdown-empty">Wszystkie etykiety przypisane</div>'}
+                </div>
+            </div>
         </div>
     `;
 }
 
 /**
- * Assign tag to company from detail view
+ * Quick assign tag from dropdown
  */
-async function assignTagToCompanyDetail() {
-    const select = document.getElementById('companyTagSelect');
-    const tagId = select.value;
-    
-    if (!tagId) {
-        showStatus('Wybierz etykietę', 'error');
-        return;
-    }
-    
-    if (!currentCompanyId) {
-        showStatus('Błąd: brak ID firmy', 'error');
-        return;
-    }
-    
+async function quickAssignTag(entityId, tagId, type) {
     try {
         // Find tag name for logging
-        const tag = companyTags.find(t => t.id === tagId);
+        const allTags = type === 'company' ? companyTags : contactTags;
+        const tag = allTags.find(t => t.id === tagId);
         const tagName = tag ? tag.name : 'etykieta';
         
-        await assignTagToEntity(currentCompanyId, tagId, 'company');
+        await assignTagToEntity(entityId, tagId, type);
         
         // Log to history
-        await DataService.logCompanyHistory(currentCompanyId, 'event', `Dodano etykietę: ${tagName}`);
+        if (type === 'company') {
+            await DataService.logCompanyHistory(entityId, 'event', `Dodano etykietę: ${tagName}`);
+        } else {
+            await DataService.logContactHistory(entityId, 'event', `Dodano etykietę: ${tagName}`);
+        }
         
         // Reload tags and history
         await loadTagsData();
-        await loadCompanyHistory();
-        
-        // Refresh detail view
-        viewCompanyDetail(currentCompanyId);
-        renderCompanyHistory(currentCompanyId);
-        
-        // Reset select
-        select.value = '';
+        if (type === 'company') {
+            await loadCompanyHistory();
+            viewCompanyDetail(entityId);
+            renderCompanyHistory(entityId);
+        } else {
+            await loadContactHistory();
+            viewContactDetail(entityId);
+            renderContactHistory(entityId);
+        }
         
         showStatus('Etykieta przypisana', 'success');
     } catch (error) {
@@ -3524,47 +3570,35 @@ async function assignTagToCompanyDetail() {
 }
 
 /**
- * Assign tag to contact from detail view
+ * Toggle tag dropdown visibility
  */
-async function assignTagToContactDetail() {
-    const select = document.getElementById('contactTagSelect');
-    const tagId = select.value;
+function toggleTagDropdown(dropdownId, buttonId) {
+    const dropdown = document.getElementById(dropdownId);
+    const button = document.getElementById(buttonId);
     
-    if (!tagId) {
-        showStatus('Wybierz etykietę', 'error');
-        return;
-    }
+    if (!dropdown || !button) return;
     
-    if (!currentContactId) {
-        showStatus('Błąd: brak ID kontaktu', 'error');
-        return;
-    }
+    const isVisible = dropdown.classList.contains('visible');
     
-    try {
-        // Find tag name for logging
-        const tag = contactTags.find(t => t.id === tagId);
-        const tagName = tag ? tag.name : 'etykieta';
+    // Close all other dropdowns
+    document.querySelectorAll('.tag-dropdown').forEach(dd => {
+        dd.classList.remove('visible');
+    });
+    
+    // Toggle this dropdown
+    if (!isVisible) {
+        dropdown.classList.add('visible');
         
-        await assignTagToEntity(currentContactId, tagId, 'contact');
-        
-        // Log to history
-        await DataService.logContactHistory(currentContactId, 'event', `Dodano etykietę: ${tagName}`);
-        
-        // Reload tags and history
-        await loadTagsData();
-        await loadContactHistory();
-        
-        // Refresh detail view
-        viewContactDetail(currentContactId);
-        renderContactHistory(currentContactId);
-        
-        // Reset select
-        select.value = '';
-        
-        showStatus('Etykieta przypisana', 'success');
-    } catch (error) {
-        console.error('Błąd przypisywania etykiety:', error);
-        showStatus('Błąd przypisywania etykiety', 'error');
+        // Close on click outside
+        setTimeout(() => {
+            const closeOnClickOutside = (e) => {
+                if (!dropdown.contains(e.target) && !button.contains(e.target)) {
+                    dropdown.classList.remove('visible');
+                    document.removeEventListener('click', closeOnClickOutside);
+                }
+            };
+            document.addEventListener('click', closeOnClickOutside);
+        }, 10);
     }
 }
 
@@ -3708,8 +3742,8 @@ async function loadTagsData() {
         window.deleteContactTag = deleteContactTag;
         window.filterByTag = filterByTag;
         window.renderDetailTags = renderDetailTags;
-        window.assignTagToCompanyDetail = assignTagToCompanyDetail;
-        window.assignTagToContactDetail = assignTagToContactDetail;
+        window.quickAssignTag = quickAssignTag;
+        window.toggleTagDropdown = toggleTagDropdown;
         window.removeTagFromDetail = removeTagFromDetail;
         window.clearTagFilter = clearTagFilter;
 
