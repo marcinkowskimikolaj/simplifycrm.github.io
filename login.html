@@ -368,6 +368,18 @@
                 const expiresIn = response.expires_in || 3600;
                 AuthService.saveSession(accessToken, email, expiresIn);
 
+                // Załaduj preferencje użytkownika (display name)
+                try {
+                    const prefs = await loadUserPreferences(email);
+                    if (prefs && prefs.displayName) {
+                        AuthService.saveDisplayName(prefs.displayName);
+                        console.log('✓ Preferencje użytkownika załadowane:', prefs.displayName);
+                    }
+                } catch (prefError) {
+                    console.warn('Nie udało się załadować preferencji (może nie istnieć arkusz):', prefError);
+                    // Kontynuuj nawet jeśli preferencje nie zostały załadowane
+                }
+
                 console.log('✓ Logowanie zakończone sukcesem:', email);
                 showStatus('Logowanie zakończone - przekierowanie...', 'info');
 
@@ -387,6 +399,38 @@
                 console.error('Błąd podczas logowania:', error);
                 showStatus('Błąd podczas logowania: ' + error.message, 'error');
                 resetButton();
+            }
+        }
+
+        /**
+         * Załaduj preferencje użytkownika z Google Sheets
+         */
+        async function loadUserPreferences(email) {
+            if (!email) return null;
+            
+            try {
+                const response = await gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: '1A4vT2_sQnM48Q74jLPqGIT27P8NRdzKwiOsiDdMByJ0',
+                    range: 'UserPreferences!A2:D',
+                });
+
+                const rows = response.result.values || [];
+                const userPref = rows.find(row => row[0] && row[0].toLowerCase() === email.toLowerCase());
+                
+                if (!userPref) {
+                    console.log('Brak preferencji dla użytkownika:', email);
+                    return null;
+                }
+
+                return {
+                    email: userPref[0] || '',
+                    displayName: userPref[1] || '',
+                    createdAt: userPref[2] || '',
+                    updatedAt: userPref[3] || ''
+                };
+            } catch (error) {
+                console.warn('Nie można załadować preferencji użytkownika:', error);
+                return null;
             }
         }
 
