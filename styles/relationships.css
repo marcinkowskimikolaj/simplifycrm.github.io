@@ -1126,7 +1126,7 @@
     
         /* ============= TAGS SYSTEM ============= */
         
-        /* Tag Manager Icon */
+        /* Tag Manager Icon - Wyrównany z Tag Filter Button */
         .tags-manager-icon {
             width: 32px;
             height: 32px;
@@ -1134,23 +1134,20 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: var(--surface);
+            background: transparent;
             border: 1px solid var(--border-subtle);
             cursor: pointer;
             transition: all 0.18s ease;
-            margin-right: 0.8rem;
         }
 
         .tags-manager-icon:hover {
             background: rgba(15,23,42,0.04);
             border-color: var(--border-strong);
-            box-shadow: 0 4px 10px rgba(15,23,42,0.16);
-            transform: translateY(-1px);
         }
 
         .tags-manager-icon svg {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             opacity: 0.7;
         }
 
