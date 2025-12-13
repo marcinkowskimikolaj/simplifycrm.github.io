@@ -1,20 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap');
+/* Login page styles (base styles are in styles/base.css) */
 
-        :root {
-            --bg-primary: #f5f1ed;
-            --surface: #ffffff;
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --border-subtle: rgba(17, 24, 39, 0.12);
-            --shadow-soft: 0 18px 55px rgba(15, 23, 42, 0.18);
-            --radius-chip: 999px;
-        }
-
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
 
         body {
             font-family: 'Manrope', sans-serif;
