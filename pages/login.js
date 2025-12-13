@@ -143,18 +143,6 @@ import { DataService } from '../shared/data-service.js';
             }
         }
 
-                return {
-                    email: userPref[0] || '',
-                    displayName: userPref[1] || '',
-                    createdAt: userPref[2] || '',
-                    updatedAt: userPref[3] || ''
-                };
-            } catch (error) {
-                console.warn('Nie można załadować preferencji użytkownika:', error);
-                return null;
-            }
-        }
-
         /**
          * Reset button state
          */
