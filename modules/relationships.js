@@ -87,7 +87,6 @@ import { bootstrapProtectedPage } from '../shared/app-shell.js';
                 // STEP 3: NOW render everything (all data is available)
                 renderCompanies();
                 renderAllContacts();
-                renderTagFilterDropdowns();
 
                 console.log('✓ Wszystkie dane załadowane i wyświetlone');
             } catch (err) {
@@ -1696,7 +1695,6 @@ async function saveCompanyTag(event) {
         await loadTagsData();
         renderCompanyTagsList();
         renderCompanies();
-        renderTagFilterDropdowns();
         
         // Reset form
         resetCompanyTagForm();
@@ -1738,16 +1736,10 @@ async function deleteCompanyTag(tagId, rowIndex) {
         await DataService.deleteCompanyTag(rowIndex);
         showStatus('Etykieta usunięta', 'success');
         
-        // Clear filter if deleted tag was active
-        if (currentTagFilter && currentTagFilter.id === tagId) {
-            clearTagFilter();
-        }
-        
         // Reload
         await loadTagsData();
         renderCompanyTagsList();
         renderCompanies();
-        renderTagFilterDropdowns();
     } catch (error) {
         console.error('Error deleting company tag:', error);
         showStatus('Błąd przy usuwaniu etykiety', 'error');
@@ -1816,7 +1808,6 @@ async function saveContactTag(event) {
         await loadTagsData();
         renderContactTagsList();
         renderAllContacts();
-        renderTagFilterDropdowns();
         
         // Reset form
         resetContactTagForm();
@@ -1858,16 +1849,10 @@ async function deleteContactTag(tagId, rowIndex) {
         await DataService.deleteContactTag(rowIndex);
         showStatus('Etykieta usunięta', 'success');
         
-        // Clear filter if deleted tag was active
-        if (currentTagFilter && currentTagFilter.id === tagId) {
-            clearTagFilter();
-        }
-        
         // Reload
         await loadTagsData();
         renderContactTagsList();
         renderAllContacts();
-        renderTagFilterDropdowns();
     } catch (error) {
         console.error('Error deleting contact tag:', error);
         showStatus('Błąd przy usuwaniu etykiety', 'error');
@@ -1927,182 +1912,8 @@ function filterByTag(tagId, tagName, tagColor, type) {
 
 function clearTagFilter() {
     currentTagFilter = null;
-    
-    // Hide filter chips
-    const contactsFilter = document.getElementById('contactsActiveFilter');
-    const companiesFilter = document.getElementById('companiesActiveFilter');
-    if (contactsFilter) contactsFilter.style.display = 'none';
-    if (companiesFilter) companiesFilter.style.display = 'none';
-    
-    // Show filter buttons again
-    const contactsBtn = document.getElementById('contactsTagFilterBtn');
-    const companiesBtn = document.getElementById('companiesTagFilterBtn');
-    if (contactsBtn) contactsBtn.style.display = '';
-    if (companiesBtn) companiesBtn.style.display = '';
-    
-    // Update dropdown selection state
-    document.querySelectorAll('.tag-filter-item.selected').forEach(item => {
-        item.classList.remove('selected');
-    });
-    
     renderCompanies();
     renderAllContacts();
-}
-
-// ========== TAG FILTER UI ==========
-
-function renderTagFilterDropdowns() {
-    renderTagFilterDropdown('contacts');
-    renderTagFilterDropdown('companies');
-}
-
-function renderTagFilterDropdown(type) {
-    const dropdownId = type === 'contacts' ? 'contactsTagFilterDropdown' : 'companiesTagFilterDropdown';
-    const dropdown = document.getElementById(dropdownId);
-    if (!dropdown) return;
-    
-    const tags = type === 'contacts' ? contactTags : companyTags;
-    const relations = type === 'contacts' ? contactTagRelations : companyTagRelations;
-    const tagType = type === 'contacts' ? 'contact' : 'company';
-    
-    if (!tags || tags.length === 0) {
-        dropdown.innerHTML = `
-            <div class="tag-filter-empty">
-                <div class="tag-filter-empty-icon">🏷️</div>
-                <span>Brak etykiet</span>
-                <small>Utwórz etykiety w ustawieniach</small>
-            </div>
-        `;
-        return;
-    }
-    
-    // Calculate tag usage counts
-    const tagCounts = {};
-    tags.forEach(tag => {
-        tagCounts[tag.id] = relations.filter(r => r.tagId === tag.id).length;
-    });
-    
-    // Sort by usage (most used first)
-    const sortedTags = [...tags].sort((a, b) => tagCounts[b.id] - tagCounts[a.id]);
-    
-    dropdown.innerHTML = `
-        <div class="tag-filter-dropdown-header">
-            <h4>Filtruj po etykiecie</h4>
-        </div>
-        ${sortedTags.map(tag => `
-            <div class="tag-filter-item ${currentTagFilter && currentTagFilter.id === tag.id ? 'selected' : ''}" 
-                 onclick="selectTagFilter('${tag.id}', '${escapeHtml(tag.name)}', '${tag.color}', '${tagType}')">
-                <span class="tag-filter-item-color" style="background-color: ${tag.color}"></span>
-                <span class="tag-filter-item-name">${escapeHtml(tag.name)}</span>
-                <span class="tag-filter-item-count">${tagCounts[tag.id]}</span>
-            </div>
-        `).join('')}
-    `;
-}
-
-function toggleTagFilterDropdown(type) {
-    const dropdownId = type === 'contacts' ? 'contactsTagFilterDropdown' : 'companiesTagFilterDropdown';
-    const btnId = type === 'contacts' ? 'contactsTagFilterBtn' : 'companiesTagFilterBtn';
-    const dropdown = document.getElementById(dropdownId);
-    const btn = document.getElementById(btnId);
-    
-    if (!dropdown || !btn) return;
-    
-    // Close other dropdowns first
-    document.querySelectorAll('.tag-filter-dropdown.visible').forEach(d => {
-        if (d.id !== dropdownId) {
-            d.classList.remove('visible');
-        }
-    });
-    document.querySelectorAll('.tag-filter-btn.active').forEach(b => {
-        if (b.id !== btnId) {
-            b.classList.remove('active');
-        }
-    });
-    
-    const isVisible = dropdown.classList.contains('visible');
-    
-    if (isVisible) {
-        dropdown.classList.remove('visible');
-        btn.classList.remove('active');
-    } else {
-        dropdown.classList.add('visible');
-        btn.classList.add('active');
-        
-        // Close on click outside
-        setTimeout(() => {
-            const closeHandler = (e) => {
-                if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
-                    dropdown.classList.remove('visible');
-                    btn.classList.remove('active');
-                    document.removeEventListener('click', closeHandler);
-                }
-            };
-            document.addEventListener('click', closeHandler);
-        }, 10);
-    }
-}
-
-function selectTagFilter(tagId, tagName, tagColor, tagType) {
-    currentTagFilter = { id: tagId, name: tagName, color: tagColor, type: tagType };
-    
-    // Close dropdown
-    document.querySelectorAll('.tag-filter-dropdown.visible').forEach(d => d.classList.remove('visible'));
-    document.querySelectorAll('.tag-filter-btn.active').forEach(b => b.classList.remove('active'));
-    
-    // Update dropdown selection state
-    document.querySelectorAll('.tag-filter-item.selected').forEach(item => item.classList.remove('selected'));
-    
-    // Update active filter UI
-    updateActiveFilterUI();
-    
-    // Re-render the appropriate list
-    if (tagType === 'company') {
-        renderCompanies();
-    } else {
-        renderAllContacts();
-    }
-    
-    // Update dropdown to show selection
-    renderTagFilterDropdowns();
-}
-
-function updateActiveFilterUI() {
-    const contactsFilter = document.getElementById('contactsActiveFilter');
-    const companiesFilter = document.getElementById('companiesActiveFilter');
-    const contactsBtn = document.getElementById('contactsTagFilterBtn');
-    const companiesBtn = document.getElementById('companiesTagFilterBtn');
-    
-    // Reset both
-    if (contactsFilter) contactsFilter.style.display = 'none';
-    if (companiesFilter) companiesFilter.style.display = 'none';
-    if (contactsBtn) contactsBtn.style.display = '';
-    if (companiesBtn) companiesBtn.style.display = '';
-    
-    if (!currentTagFilter) return;
-    
-    // Show appropriate filter chip
-    if (currentTagFilter.type === 'contact') {
-        if (contactsFilter) {
-            contactsFilter.style.display = 'flex';
-            contactsFilter.innerHTML = `
-                <span class="filter-color" style="background-color: ${currentTagFilter.color}"></span>
-                <span class="filter-name">${escapeHtml(currentTagFilter.name)}</span>
-                <button class="filter-clear" onclick="clearTagFilter()" title="Usuń filtr">×</button>
-            `;
-        }
-        if (contactsBtn) contactsBtn.style.display = 'none';
-    } else {
-        if (companiesFilter) {
-            companiesFilter.style.display = 'flex';
-            companiesFilter.innerHTML = `
-                <span class="filter-color" style="background-color: ${currentTagFilter.color}"></span>
-                <span class="filter-name">${escapeHtml(currentTagFilter.name)}</span>
-                <button class="filter-clear" onclick="clearTagFilter()" title="Usuń filtr">×</button>
-            `;
-        }
-        if (companiesBtn) companiesBtn.style.display = 'none';
-    }
 }
 
 // ========== RENDER TAGS IN VIEWS ==========
@@ -2415,9 +2226,6 @@ async function loadTagsData() {
         window.editContactTag = editContactTag;
         window.deleteContactTag = deleteContactTag;
         window.filterByTag = filterByTag;
-        window.clearTagFilter = clearTagFilter;
-        window.toggleTagFilterDropdown = toggleTagFilterDropdown;
-        window.selectTagFilter = selectTagFilter;
         window.renderDetailTags = renderDetailTags;
         window.quickAssignTag = quickAssignTag;
         window.toggleTagDropdown = toggleTagDropdown;
