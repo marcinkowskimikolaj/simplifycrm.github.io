@@ -1,5 +1,5 @@
-import { CONFIG } from '../shared/config.js';
-        import { AuthService } from '../shared/auth.js';
+import { AuthService } from '../shared/auth.js';
+import { DataService } from '../shared/data-service.js';
 
         // Sprawdź czy użytkownik jest już zalogowany
         if (AuthService.isAuthenticated()) {
@@ -111,7 +111,7 @@ import { CONFIG } from '../shared/config.js';
 
                 // Załaduj preferencje użytkownika (display name)
                 try {
-                    const prefs = await loadUserPreferences(email);
+                    const prefs = await DataService.loadUserPreferences(email, false);
                     if (prefs && prefs.displayName) {
                         AuthService.saveDisplayName(prefs.displayName);
                         console.log('✓ Preferencje użytkownika załadowane:', prefs.displayName);
@@ -143,37 +143,12 @@ import { CONFIG } from '../shared/config.js';
             }
         }
 
-        /**
-         * Załaduj preferencje użytkownika z Google Sheets
-         */
-        async function loadUserPreferences(email) {
-            if (!email) return null;
-            
-            try {
-                const response = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: '1A4vT2_sQnM48Q74jLPqGIT27P8NRdzKwiOsiDdMByJ0',
-                    range: 'UserPreferences!A2:D',
-                });
-
-                const rows = response.result.values || [];
-                const userPref = rows.find(row => row[0] && row[0].toLowerCase() === email.toLowerCase());
-                
-                if (!userPref) {
-                    console.log('Brak preferencji dla użytkownika:', email);
-                    return null;
-                }
-
                 return {
                     email: userPref[0] || '',
                     displayName: userPref[1] || '',
                     createdAt: userPref[2] || '',
                     updatedAt: userPref[3] || ''
                 };
-            } catch (error) {
-                console.warn('Nie można załadować preferencji użytkownika:', error);
-                return null;
-            }
-        }
 
         /**
          * Reset button state
