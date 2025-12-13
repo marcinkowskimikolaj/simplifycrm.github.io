@@ -1,128 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Bebas+Neue&family=Outfit:wght@400;500;600;700&display=swap');
+/* Relationships module styles (base styles are in styles/base.css) */
 
-        :root {
-            --bg-primary: #f5f1ed;
-            --surface: #ffffff;
-            --surface-soft: rgba(255, 255, 255, 0.88);
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --border-subtle: rgba(17, 24, 39, 0.12);
-            --border-strong: rgba(17, 24, 39, 0.24);
-            --shadow-soft: 0 18px 55px rgba(15, 23, 42, 0.18);
-            --shadow-card: 0 10px 30px rgba(15, 23, 42, 0.16);
-            --radius-card: 18px;
-            --radius-chip: 999px;
+/* Header overrides for this module */
+.app-header { padding: 1.4rem 2rem; }
+.app-header-inner { max-width: 1200px; }
+.app-logo { font-size: 1.9rem; }
+.app-header-right { gap: 0.8rem; }
+.logout-btn { padding: 0.55rem 0.95rem; font-size: 0.7rem; }
 
-            --accent: #2563eb;
-            --success: #16a34a;
-            --error: #dc2626;
-        }
-
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Manrope', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-        }
-
-        button {
-            font-family: inherit;
-        }
-
-        /* HEADER */
-        .app-header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border-subtle);
-            padding: 1.4rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .app-header-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .app-header-left {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
-
-        .app-logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.9rem;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: opacity 0.2s ease;
-        }
-
-        .app-logo:hover {
-            opacity: 0.7;
-        }
-
-        .app-logo-subtitle {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: var(--text-secondary);
-        }
-
-        .app-header-right {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .user-email {
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--text-secondary);
-            max-width: 220px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .logout-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-chip);
-            border: 1px solid var(--border-strong);
-            background: transparent;
-            padding: 0.55rem 0.95rem;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(15,23,42,0.03);
-            border-color: var(--text-primary);
-            box-shadow: 0 8px 20px rgba(15,23,42,0.16);
-            transform: translateY(-1px);
-        }
-
-        /* BREADCRUMB */
+/* BREADCRUMB */
         .breadcrumb {
             max-width: 1200px;
             margin: 0 auto;
