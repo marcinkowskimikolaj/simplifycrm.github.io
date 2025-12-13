@@ -2344,51 +2344,35 @@ async function loadTagsData() {
             document.getElementById('addContactNoteBtn').addEventListener('click', () => openNoteModal('contact', currentContactId));
 
             // History tabs
-document.querySelectorAll('.history-tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const entity = btn.dataset.entity;
-        const scope = btn.dataset.scope;
-        document.querySelectorAll(`.history-tab-btn[data-entity="${entity}"]`).forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        if (entity === 'company') {
-            currentCompanyHistoryScope = scope;
-            if (currentCompanyId) {
-                if (scope === 'activities') {
-                    renderCompanyActivities(currentCompanyId);
-                } else {
-                    renderCompanyHistory(currentCompanyId);
-                }
-            }
-        } else if (entity === 'contact') {
-            currentContactHistoryScope = scope;
-            if (currentContactId) {
-                if (scope === 'activities') {
-                    renderContactActivities(currentContactId);
-                } else {
-                    renderContactHistory(currentContactId);
-                }
-            }
-        }
-    });
-});
-
-            // Close modals on background click
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) modal.classList.remove('active');
+            document.querySelectorAll('.history-tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const entity = btn.dataset.entity;
+                    const scope = btn.dataset.scope;
+                    document.querySelectorAll(`.history-tab-btn[data-entity="${entity}"]`).forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    if (entity === 'company') {
+                        currentCompanyHistoryScope = scope;
+                        if (currentCompanyId) {
+                            if (scope === 'activities') {
+                                renderCompanyActivities(currentCompanyId);
+                            } else {
+                                renderCompanyHistory(currentCompanyId);
+                            }
+                        }
+                    } else if (entity === 'contact') {
+                        currentContactHistoryScope = scope;
+                        if (currentContactId) {
+                            if (scope === 'activities') {
+                                renderContactActivities(currentContactId);
+                            } else {
+                                renderContactHistory(currentContactId);
+                            }
+                        }
+                    }
                 });
             });
 
-            // Hide company suggestions when clicking outside
-            document.addEventListener('click', (e) => {
-                if (companyInputEl && companyInputEl.closest('.company-picker') && companySuggestionsEl) {
-                    if (!companyInputEl.closest('.company-picker').contains(e.target)) {
-                        hideCompanySuggestions();
-                    }
-                }
-            });
-        });
-// Activity modal
+            // Activity modal
             document.getElementById('closeActivityModalBtn').addEventListener('click', closeActivityModal);
             document.getElementById('cancelActivityBtn').addEventListener('click', closeActivityModal);
             document.getElementById('activityForm').addEventListener('submit', saveActivity);
@@ -2409,6 +2393,24 @@ document.querySelectorAll('.history-tab-btn').forEach(btn => {
             document.getElementById('activityModal').addEventListener('click', (e) => {
                 if (e.target.id === 'activityModal') closeActivityModal();
             });
+
+            // Close modals on background click
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) modal.classList.remove('active');
+                });
+            });
+
+            // Hide company suggestions when clicking outside
+            document.addEventListener('click', (e) => {
+                if (companyInputEl && companyInputEl.closest('.company-picker') && companySuggestionsEl) {
+                    if (!companyInputEl.closest('.company-picker').contains(e.target)) {
+                        hideCompanySuggestions();
+                    }
+                }
+            });
+        });
+
         // ============= START =============
         if (typeof gapi !== 'undefined') {
             init();
